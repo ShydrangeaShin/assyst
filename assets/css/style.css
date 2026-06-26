@@ -122,7 +122,9 @@ img{
 
     width:270px;
 
-    flex-shrink:0;
+    min-height:calc(100vh - 30px);
+
+    margin:15px;
 
     background:linear-gradient(
         180deg,
@@ -132,7 +134,10 @@ img{
 
     border-radius:28px;
 
-    box-shadow:0 15px 40px rgba(30,86,205,.18);
+    box-shadow:
+    0 20px 45px rgba(30,86,205,.18);
+
+    transition:.3s;
 
     overflow:hidden;
 
@@ -253,25 +258,23 @@ img{
 
     display:flex;
 
-    align-items:stretch;
-
-    min-height:100vh;
-
-    padding:15px;
-
-    gap:20px;
+    align-items:flex-start;
 
 }
-
 
 .content{
 
     flex:1;
 
-    min-width:0;
+    padding:25px;
 
-    padding:0;
+}
 
+.content{
+
+    flex:1;
+
+    padding:25px;
 }
 
 /* ==================================================
@@ -720,44 +723,32 @@ img{
 
 @media(max-width:992px){
 
-    .main-layout{
-
-        display:block;
-
-        padding:0;
-
-    }
-
     .sidebar{
 
         position:fixed;
 
-        top:15px;
+        left:-260px;
 
-        left:-300px;
-
-        width:270px;
-
-        height:calc(100vh - 30px);
-
-        transition:.3s;
+        top:0;
 
         z-index:1050;
-
     }
 
     .sidebar.show{
 
-        left:15px;
-
+        left:0;
     }
 
     .content{
 
         width:100%;
 
-        padding:20px;
+        padding:15px;
+    }
 
+    .main-layout{
+
+        display:block;
     }
 
 }

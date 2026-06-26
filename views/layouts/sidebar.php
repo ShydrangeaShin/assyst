@@ -6,7 +6,7 @@ $currentPage = $_GET['page'] ?? '';
 
 ?>
 
-<aside class="sidebar p-3">
+<aside class="sidebar p-2 sticky-top bg-primary">
 
     <div class="sidebar-brand text-center mb-2">
 

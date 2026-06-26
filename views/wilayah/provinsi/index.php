@@ -137,7 +137,7 @@
 
                             <a
                                 href="?page=provinsi-delete&id=<?= $row['id_provinsi'] ?>"
-                                class="btn btn-sm btn-outline-danger rounded-pill me-2">
+                                class="btn btn-sm btn-outline-danger rounded-pill me-2" onclick="return confirm('Apakah Anda yakin ingin menghapus provinsi ini?')">
 
                                 <i class="bi bi-trash"></i>
                             </a>

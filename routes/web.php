@@ -101,6 +101,27 @@ switch ($page) {
 |--------------------------------------------------------------------------
 */
 
+    case 'dashboard':
+
+        if (!isset($_SESSION['user'])) {
+
+            header("Location:?page=login");
+
+            exit;
+        }
+
+        if ($_SESSION['user']['role'] == 'Admin') {
+
+            $dashboard->admin();
+
+        } elseif ($_SESSION['user']['role'] == 'Petugas') {
+
+            $dashboard->petugas();
+
+        }
+
+    break;
+
     /*
     |--------------------------------------------------------------------------
     | PROVINSI
