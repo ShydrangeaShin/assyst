@@ -2,25 +2,30 @@
 
 $role = $_SESSION['user']['role'] ?? '';
 
+$currentPage = $_GET['page'] ?? '';
+
 ?>
 
-<div class="sidebar" id="sidebar">
+<aside class="sidebar p-3">
 
-    <div class="sidebar-header">
+    <div class="sidebar-brand text-center mb-2">
 
-        <h4>AsSyst</h4>
+        <h4 class="fw-bold text-white mb-1">
+            AsSyst
+        </h4>
 
-        <small>Assistance System</small>
+        <small class="text-white-50">
+            Assistance System
+        </small>
 
     </div>
 
-    <ul class="sidebar-menu">
+    <ul class="nav flex-column sidebar-menu">
 
-        <!-- DASHBOARD -->
+        <li class="nav-item mb-1">
 
-        <li>
-
-            <a href="?page=dashboard">
+            <a class="nav-link <?= str_contains($currentPage,'dashboard') ? 'active' : '' ?>"
+               href="?page=dashboard">
 
                 <i class="bi bi-speedometer2"></i>
 
@@ -38,29 +43,29 @@ $role = $_SESSION['user']['role'] ?? '';
                 Master Wilayah
             </li>
 
-            <li>
-                <a href="?page=provinsi">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= ($currentPage=='provinsi' || $currentPage=='provinsi-create' || $currentPage=='provinsi-edit') ? 'active' : '' ?>"href="?page=provinsi">
                     <i class="bi bi-map"></i>
                     Provinsi
                 </a>
             </li>
 
-            <li>
-                <a href="?page=kota">
+            <li class="nav-item mb-1"> 
+                <a class="nav-link <?= ($currentPage=='kota' || $currentPage=='kota-create' || $currentPage=='kota-edit') ? 'active' : '' ?>" href="?page=kota">
                     <i class="bi bi-building"></i>
                     Kota/Kabupaten
                 </a>
             </li>
 
-            <li>
-                <a href="?page=kecamatan">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= $currentPage=='kecamatan' ? 'active' : '' ?>" href="?page=kecamatan">
                     <i class="bi bi-geo"></i>
                     Kecamatan
                 </a>
             </li>
 
-            <li>
-                <a href="?page=desa">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= $currentPage=='desa' ? 'active' : '' ?>" href="?page=desa">
                     <i class="bi bi-pin-map"></i>
                     Desa/Kelurahan
                 </a>
@@ -72,29 +77,29 @@ $role = $_SESSION['user']['role'] ?? '';
                 Pengguna
             </li>
 
-            <li>
-                <a href="?page=akun">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= $currentPage=='akun' ? 'active' : '' ?>" href="?page=akun">
                     <i class="bi bi-people"></i>
                     Manajemen Akun
                 </a>
             </li>
 
-            <li>
-                <a href="?page=tugas">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= $currentPage=='tugas' ? 'active' : '' ?>" href="?page=tugas">
                     <i class="bi bi-clipboard-check"></i>
                     Tugas Petugas
                 </a>
             </li>
 
-            <li>
-                <a href="?page=laporan">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= $currentPage=='laporan' ? 'active' : '' ?>" href="?page=laporan">
                     <i class="bi bi-file-earmark-text"></i>
                     Laporan
                 </a>
             </li>
 
-            <li>
-                <a href="?page=log">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= $currentPage=='log' ? 'active' : '' ?>" href="?page=log">
                     <i class="bi bi-clock-history"></i>
                     Log Aktivitas
                 </a>
@@ -108,36 +113,36 @@ $role = $_SESSION['user']['role'] ?? '';
                 Pendataan
             </li>
 
-            <li>
-                <a href="?page=keluarga">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= $currentPage=='keluarga' ? 'active' : '' ?>" href="?page=keluarga">
                     <i class="bi bi-house"></i>
                     Data Keluarga
                 </a>
             </li>
 
-            <li>
-                <a href="?page=kondisi">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= $currentPage=='kondisi' ? 'active' : '' ?>" href="?page=kondisi">
                     <i class="bi bi-card-checklist"></i>
                     Kondisi Sosial
                 </a>
             </li>
 
-            <li>
-                <a href="?page=verifikasi">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= $currentPage=='verifikasi' ? 'active' : '' ?>" href="?page=verifikasi">
                     <i class="bi bi-patch-check"></i>
                     Verifikasi
                 </a>
             </li>
 
-            <li>
-                <a href="?page=penalaran">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= $currentPage=='penalaran' ? 'active' : '' ?>" href="?page=penalaran">
                     <i class="bi bi-diagram-3"></i>
                     Hasil Penalaran
                 </a>
             </li>
 
-            <li>
-                <a href="?page=tugas">
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= $currentPage=='tugas' ? 'active' : '' ?>" href="?page=tugas">
                     <i class="bi bi-list-task"></i>
                     Tugas Saya
                 </a>
@@ -145,6 +150,20 @@ $role = $_SESSION['user']['role'] ?? '';
 
         <?php endif; ?>
 
-    </ul>
+        <li class="menu-title">
+            Logout
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="?page=logout">
+                <i class="bi bi-box-arrow-right"></i>
+                Logout
+            </a>
+        </li>
 
-</div>
+        <li class="menu-title">
+            <div>© <?= date('Y') ?>AsSyst</div>
+        </li>
+
+
+    </ul>
+</aside>

@@ -44,7 +44,7 @@
 
 body{
     background:var(--background);
-    font-family:'Segoe UI',sans-serif;
+    font-family:'Poppins',sans-serif;
     color:var(--text);
     overflow-x:hidden;
 }
@@ -114,102 +114,135 @@ img{
     color:white;
 }
 
-/* ==================================================
+/* ==========================================
    SIDEBAR
-================================================== */
+========================================== */
 
 .sidebar{
 
-    width:var(--sidebar-width);
+    width:270px;
 
-    min-height:100vh;
+    flex-shrink:0;
 
-    background:var(--primary);
+    background:linear-gradient(
+        180deg,
+        #1E56CD,
+        #2F6CE0
+    );
 
-    color:white;
+    border-radius:28px;
 
-    transition:var(--transition);
+    box-shadow:0 15px 40px rgba(30,86,205,.18);
 
-    box-shadow:var(--shadow-md);
+    overflow:hidden;
+
 }
 
-.sidebar-header{
+.sidebar-brand{
 
-    padding:25px;
-
-    text-align:center;
+    padding:20px 10px;
 
     border-bottom:1px solid rgba(255,255,255,.15);
+
 }
 
-.sidebar-header h4{
+.logo-circle{
 
-    margin:0;
+    width:70px;
 
-    font-weight:700;
-}
+    height:70px;
 
-.sidebar-header small{
+    background:rgba(255,255,255,.15);
 
-    opacity:.8;
-}
-
-.sidebar-menu{
-
-    list-style:none;
-
-    padding:10px 0;
-}
-
-.sidebar-menu li{
-
-    margin:4px 10px;
-}
-
-.sidebar-menu li a{
+    border-radius:50%;
 
     display:flex;
 
     align-items:center;
 
-    gap:10px;
+    justify-content:center;
 
-    padding:12px 15px;
+    font-size:28px;
 
     color:white;
 
-    border-radius:10px;
+    backdrop-filter:blur(10px);
 
-    transition:var(--transition);
 }
 
-.sidebar-menu li a:hover{
+.sidebar-menu{
 
-    background:rgba(255,255,255,.15);
-}
+    margin-top:20px;
 
-.sidebar-menu li a.active{
-
-    background:white;
-
-    color:var(--primary);
-
-    font-weight:600;
 }
 
 .menu-title{
 
-    padding:18px 20px 10px;
+    color:rgba(255,255,255,.65);
 
-    font-size:11px;
+    font-size:12px;
 
     font-weight:700;
 
-    letter-spacing:1px;
-
     text-transform:uppercase;
 
-    opacity:.7;
+    letter-spacing:1px;
+
+    margin:20px 10px 10px;
+
+}
+
+.sidebar .nav-link{
+
+    color:rgba(255,255,255,.85);
+
+    border-radius:16px;
+
+    padding:13px 18px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    transition:.25s;
+
+    font-weight:500;
+
+}
+
+.sidebar .nav-link:hover{
+
+    background:rgba(255,255,255,.15);
+
+    color:white;
+
+    transform:translateX(5px);
+
+}
+
+.sidebar .nav-link.active{
+
+    background:white;
+
+    color:#1E56CD;
+
+    font-weight:600;
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.12);
+
+}
+
+.sidebar .nav-link i{
+
+    width:22px;
+
+    text-align:center;
+
+    font-size:18px;
+
 }
 
 /* ==================================================
@@ -219,13 +252,26 @@ img{
 .main-layout{
 
     display:flex;
+
+    align-items:stretch;
+
+    min-height:100vh;
+
+    padding:15px;
+
+    gap:20px;
+
 }
+
 
 .content{
 
     flex:1;
 
-    padding:25px;
+    min-width:0;
+
+    padding:0;
+
 }
 
 /* ==================================================
@@ -500,6 +546,41 @@ img{
 }
 
 /* ==================================================
+   FORBIDDEN / ERROR PAGE
+================================================== */
+
+.forbidden-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 50px 15px;
+    min-height: 70vh;
+}
+
+.forbidden-page .error-code {
+    font-size: 10rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--danger);
+    text-shadow: 4px 4px 0 var(--white), 6px 6px 0 var(--border);
+}
+
+.forbidden-page h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 1rem;
+}
+
+.forbidden-page p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+/* ==================================================
    CHART
 ================================================== */
 
@@ -639,32 +720,44 @@ img{
 
 @media(max-width:992px){
 
+    .main-layout{
+
+        display:block;
+
+        padding:0;
+
+    }
+
     .sidebar{
 
         position:fixed;
 
-        left:-260px;
+        top:15px;
 
-        top:0;
+        left:-300px;
+
+        width:270px;
+
+        height:calc(100vh - 30px);
+
+        transition:.3s;
 
         z-index:1050;
+
     }
 
     .sidebar.show{
 
-        left:0;
+        left:15px;
+
     }
 
     .content{
 
         width:100%;
 
-        padding:15px;
-    }
+        padding:20px;
 
-    .main-layout{
-
-        display:block;
     }
 
 }

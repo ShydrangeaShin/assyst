@@ -1,6 +1,6 @@
 <?php require_once 'views/layouts/header.php'; ?>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm rounded">
 
     <div class="container">
 

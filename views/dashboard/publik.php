@@ -48,6 +48,112 @@
 
     </div>
 
+    <div class="card shadow-sm mb-4">
+
+    <div class="card-header">
+
+        <strong>Filter Wilayah</strong>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <div class="col-md-3">
+
+                <label class="form-label">
+                    Provinsi
+                </label>
+
+                <select
+                    id="provinsi"
+                    class="form-select">
+
+                    <option value="">
+                        Semua Provinsi
+                    </option>
+
+                    <?php while($row=mysqli_fetch_assoc($provinsi)){ ?>
+
+                        <option value="<?= $row['id_provinsi'] ?>">
+
+                            <?= $row['nama_provinsi'] ?>
+
+                        </option>
+
+                    <?php } ?>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="form-label">
+                    Kota/Kabupaten
+                </label>
+
+                <select
+                    id="kota"
+                    class="form-select">
+
+                    <option>
+
+                        Semua Kota
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="form-label">
+                    Kecamatan
+                </label>
+
+                <select
+                    id="kecamatan"
+                    class="form-select">
+
+                    <option>
+
+                        Semua Kecamatan
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="form-label">
+                    Desa
+                </label>
+
+                <select
+                    id="desa"
+                    class="form-select">
+
+                    <option>
+
+                        Semua Desa
+
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
     <div class="row g-4">
 
         <div class="col-lg-3 col-md-6">
@@ -135,47 +241,3 @@
 
 </div>
 
-
-<footer class="footer-public">
-
-    <div class="container">
-
-        <div class="row">
-
-            <div class="col-md-6">
-
-                <h5>AsSyst</h5>
-
-                <p class="mb-0 text-muted">
-
-                    Assistance System merupakan sistem pendukung keputusan
-                    berbasis logika penalaran untuk membantu proses
-                    penentuan penerima bantuan sosial.
-
-                </p>
-
-            </div>
-
-            <div class="col-md-6 text-md-end">
-
-                <p class="mb-1">
-
-                    © <?= date('Y') ?>
-
-                    AsSyst
-
-                </p>
-
-                <small class="text-muted">
-
-                    Modern Government Information System
-
-                </small>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</footer>

@@ -26,7 +26,7 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <h6>Total Layak</h6>
-                <h2>450</h2>
+                <h2><?= $totalLayak ?></h2>
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <h6>Total Verifikasi</h6>
-                <h2>50</h2>
+                <h2><?= $totalVerifikasi ?></h2>
             </div>
         </div>
     </div>

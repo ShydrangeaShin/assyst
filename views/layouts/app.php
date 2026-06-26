@@ -1,5 +1,5 @@
 <?php require_once 'views/layouts/header.php'; ?>
-<?php require_once 'views/layouts/navbar.php'; ?>
+
 
 <div class="main-layout">
 
@@ -8,7 +8,7 @@
     <main class="content">
 
         <?php
-        if (isset($breadcrumbs)) {
+        if(isset($breadcrumbs)){
             require_once 'views/layouts/breadcrumb.php';
         }
         ?>

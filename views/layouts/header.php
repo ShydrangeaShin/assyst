@@ -25,6 +25,7 @@ if (!isset($page_title)) {
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= asset('css/style.css') ?>">
 
+
 </head>
 
 <body>

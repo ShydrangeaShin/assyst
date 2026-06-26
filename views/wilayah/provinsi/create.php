@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card shadow-sm rounded-4">
 
     <div class="card-header">
 
@@ -8,7 +8,9 @@
 
     <div class="card-body">
 
-        <form method="POST">
+        <form
+            method="POST"
+            action="?page=provinsi-store">
 
             <div class="mb-3">
 
@@ -21,12 +23,12 @@
                 <input
                     type="text"
                     name="nama_provinsi"
-                    class="form-control">
+                    class="form-control"
+                    required>
 
             </div>
 
             <button
-                type="submit"
                 class="btn btn-primary">
 
                 Simpan

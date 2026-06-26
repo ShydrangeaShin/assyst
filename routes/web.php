@@ -2,6 +2,7 @@
 
 $page = $_GET['page'] ?? 'dashboard-publik';
 
+require_once 'config/database.php';
 require_once 'controllers/AuthController.php';
 require_once 'controllers/DashboardController.php';
 
@@ -19,19 +20,14 @@ switch ($page) {
 
     case 'login':
 
-    if($_SERVER['REQUEST_METHOD']
-       == 'POST')
-    {
-        $auth->login();
-    }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $auth->login();
+        }
 
-    $page_title = 'Login';
+        $page_title = 'Login';
+        $content = 'views/auth/login.php';
 
-    $content =
-    'views/auth/login.php';
-
-    include
-    'views/layouts/guest.php';
+        include 'views/layouts/guest.php';
 
     break;
 
@@ -95,20 +91,82 @@ switch ($page) {
 
     case 'logout':
 
-    $auth->logout();
+        $auth->logout();
 
+        break;
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN ROUTES  
+|--------------------------------------------------------------------------
+*/
+
+    /*
+    |--------------------------------------------------------------------------
+    | PROVINSI
+    |--------------------------------------------------------------------------
+    */    
+    
+    case 'provinsi':
+    onlyAdmin();
+
+    require_once 'controllers/ProvinsiController.php';
+
+    $controller = new ProvinsiController($conn);
+    $controller->index();
     break;
+
+    case 'provinsi-create':
+        onlyAdmin();
+
+        require_once 'controllers/ProvinsiController.php';
+
+        $controller = new ProvinsiController($conn);
+        $controller->create();
+        break;
+
+    case 'provinsi-store':
+        onlyAdmin();
+
+        require_once 'controllers/ProvinsiController.php';
+
+        $controller = new ProvinsiController($conn);
+        $controller->store();
+        break;
+
+    case 'provinsi-edit':
+        onlyAdmin();
+
+        require_once 'controllers/ProvinsiController.php';
+
+        $controller = new ProvinsiController($conn);
+        $controller->edit();
+        break;
+
+    case 'provinsi-update':
+        onlyAdmin();
+
+        require_once 'controllers/ProvinsiController.php';
+
+        $controller = new ProvinsiController($conn);
+        $controller->update();
+        break;
+
+    case 'provinsi-delete':
+        onlyAdmin();
+
+        require_once 'controllers/ProvinsiController.php';
+
+        $controller = new ProvinsiController($conn);
+        $controller->delete();
+        break;
 
     /*
     |--------------------------------------------------------------------------
     | DEFAULT
     |--------------------------------------------------------------------------
     */
-
     default:
-
-        include
-        'views/auth/forbidden.php';
-
+        include 'views/auth/forbidden.php';
         break;
 }
