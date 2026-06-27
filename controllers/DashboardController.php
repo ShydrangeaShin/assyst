@@ -170,11 +170,52 @@ class DashboardController
     public function petugas()
     {
         $page_title = "Dashboard Petugas";
-
         $breadcrumbs = ["Dashboard"];
 
-        $content = "views/dashboard/petugas.php";
+        // Pastikan ada session user untuk mengambil ID
+        if (!isset($_SESSION['user'])) {
+            header("Location:?page=login");
+            exit;
+        }
 
+        $id_petugas = (int)$_SESSION['user']['id'];
+
+        // 1. Total Keluarga yang telah disurvei oleh petugas ini
+        $totalKeluarga = $this->getCount("SELECT COUNT(id_keluarga) FROM keluarga WHERE id_petugas = $id_petugas");
+
+        // 2. Statistik Status Tugas Lapangan
+        $sqlTugas = "
+            SELECT 
+                COUNT(id_tugas) as total_tugas,
+                SUM(status_tugas = 'Belum Dikerjakan') as belum,
+                SUM(status_tugas = 'Proses') as proses,
+                SUM(status_tugas = 'Selesai') as selesai
+            FROM tugas_petugas
+            WHERE id_petugas = $id_petugas
+        ";
+        $statTugas = $this->getRow($sqlTugas);
+        
+        $totalTugas = (int)($statTugas['total_tugas'] ?? 0);
+        $tugasBelum = (int)($statTugas['belum'] ?? 0);
+        $tugasProses = (int)($statTugas['proses'] ?? 0);
+        $tugasSelesai = (int)($statTugas['selesai'] ?? 0);
+
+        // 3. Ambil 5 Tugas Terbaru yang Ditugaskan
+        $tugasTerbaru = mysqli_query($this->conn, "
+            SELECT t.*, d.nama_desa, k.nama_kecamatan, ko.nama_kota
+            FROM tugas_petugas t
+            LEFT JOIN desa d ON t.id_desa = d.id_desa
+            LEFT JOIN kecamatan k ON d.id_kecamatan = k.id_kecamatan
+            LEFT JOIN kota ko ON k.id_kota = ko.id_kota
+            WHERE t.id_petugas = $id_petugas
+            ORDER BY t.tanggal_penugasan DESC, t.id_tugas DESC
+            LIMIT 5
+        ");
+
+        // 4. Hitung Persentase Penyelesaian Tugas
+        $persenSelesai = $totalTugas > 0 ? round(($tugasSelesai / $totalTugas) * 100, 1) : 0;
+
+        $content = "views/dashboard/petugas.php";
         include "views/layouts/app.php";
     }
 
