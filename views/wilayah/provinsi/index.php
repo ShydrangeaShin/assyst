@@ -115,16 +115,26 @@
                                 <?= htmlspecialchars($row['nama_provinsi']) ?>
 
                             </span>
+                            <?php if(!$row['can_delete']): ?>
+
+                                <span class="badge bg-warning text-dark ms-2">
+
+                                    Digunakan
+
+                                </span>
+
+                            <?php endif; ?>
 
                         </td>
 
                         <td class="text-center ">
 
                             <a
-                                href="?page=provinsi-detail&id=<?= $row['id_provinsi'] ?>"
-                                class="btn btn-sm btn-outline-info rounded-pill me-2">
+                                href="?page=provinsi-detail&id=<?= $row['id_provinsi']; ?>"
+                                class="btn btn-sm btn-outline-info rounded-pill">
 
                                 <i class="bi bi-eye"></i>
+
                             </a>
 
                             <a
@@ -135,12 +145,27 @@
                             </a>
 
 
-                            <a
-                                href="?page=provinsi-delete&id=<?= $row['id_provinsi'] ?>"
-                                class="btn btn-sm btn-outline-danger rounded-pill me-2" onclick="return confirm('Apakah Anda yakin ingin menghapus provinsi ini?')">
+                             <?php if($row['can_delete']): ?>
 
-                                <i class="bi bi-trash"></i>
-                            </a>
+                                <a
+                                    href="?page=provinsi-delete&id=<?= $row['id_provinsi'] ?>"
+                                    onclick="return confirm('Hapus provinsi ini?')"
+                                    class="btn btn-sm btn-outline-danger rounded-pill">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </a>
+
+                            <?php else: ?>
+
+                                <button
+                                    class="btn btn-sm btn-outline-secondary rounded-pill" disabled title="Masih digunakan oleh data Kota/Kabupaten">
+
+                                    <i class="bi bi-lock-fill"></i>
+
+                                </button>
+
+                            <?php endif; ?>
 
 
                         </td>

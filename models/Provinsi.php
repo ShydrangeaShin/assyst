@@ -154,4 +154,31 @@ class Provinsi
         return $total > 0;
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Find By ID
+    |--------------------------------------------------------------------------
+    */
+
+    public function find($id)
+    {
+        $id = (int)$id;
+
+        $query = mysqli_query(
+            $this->conn,
+            "
+            SELECT
+                p.*,
+                (
+                    SELECT COUNT(*)
+                    FROM kota k
+                    WHERE k.id_provinsi = p.id_provinsi
+                ) AS total_kota
+            FROM provinsi p
+            WHERE p.id_provinsi = '$id'
+            "
+        );
+
+        return mysqli_fetch_assoc($query);
+    }
 }

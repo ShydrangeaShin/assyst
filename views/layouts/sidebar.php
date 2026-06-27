@@ -44,28 +44,28 @@ $currentPage = $_GET['page'] ?? '';
             </li>
 
             <li class="nav-item mb-1">
-                <a class="nav-link <?= ($currentPage=='provinsi' || $currentPage=='provinsi-create' || $currentPage=='provinsi-edit') ? 'active' : '' ?>"href="?page=provinsi">
+                <a class="nav-link <?= ($currentPage=='provinsi' || $currentPage=='provinsi-create' || $currentPage=='provinsi-edit' || $currentPage=='provinsi-detail') ? 'active' : '' ?>"href="?page=provinsi">
                     <i class="bi bi-map"></i>
                     Provinsi
                 </a>
             </li>
 
             <li class="nav-item mb-1"> 
-                <a class="nav-link <?= ($currentPage=='kota' || $currentPage=='kota-create' || $currentPage=='kota-edit') ? 'active' : '' ?>" href="?page=kota">
+                <a class="nav-link <?= ($currentPage=='kota' || $currentPage=='kota-create' || $currentPage=='kota-edit' || $currentPage=='kota-detail') ? 'active' : '' ?>" href="?page=kota">
                     <i class="bi bi-building"></i>
                     Kota/Kabupaten
                 </a>
             </li>
 
             <li class="nav-item mb-1">
-                <a class="nav-link <?= $currentPage=='kecamatan' ? 'active' : '' ?>" href="?page=kecamatan">
+                <a class="nav-link <?= ($currentPage=='kecamatan' || $currentPage=='kecamatan-create' || $currentPage=='kecamatan-edit' || $currentPage=='kecamatan-detail') ? 'active' : '' ?>" href="?page=kecamatan">
                     <i class="bi bi-geo"></i>
                     Kecamatan
                 </a>
             </li>
 
             <li class="nav-item mb-1">
-                <a class="nav-link <?= $currentPage=='desa' ? 'active' : '' ?>" href="?page=desa">
+                <a class="nav-link <?= ($currentPage=='desa' || $currentPage=='desa-create' || $currentPage=='desa-edit' || $currentPage=='desa-detail') ? 'active' : '' ?>" href="?page=desa">
                     <i class="bi bi-pin-map"></i>
                     Desa/Kelurahan
                 </a>

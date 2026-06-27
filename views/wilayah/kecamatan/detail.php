@@ -1,18 +1,42 @@
-<div class="card">
+<?php
+$row = $kecamatan ?? $data ?? [];
+?>
 
-    <div class="card-header">
+<div class="card shadow-sm border-0 rounded-4">
 
-        Detail Kecamatan
+    <div class="card-header bg-white">
+
+        <h4 class="fw-bold mb-0">
+
+            Detail Kecamatan
+
+        </h4>
 
     </div>
 
     <div class="card-body">
 
-        <table class="table">
+        <table class="table table-borderless">
 
             <tr>
 
-                <th width="200">
+                <th width="220">
+
+                    ID Kecamatan
+
+                </th>
+
+                <td>
+
+                    <?= htmlspecialchars($row['id_kecamatan'] ?? $row['id'] ?? '-') ?>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <th>
 
                     Provinsi
 
@@ -20,7 +44,7 @@
 
                 <td>
 
-                    <?= $data['nama_provinsi'] ?>
+                    <?= htmlspecialchars($row['nama_provinsi'] ?? '-') ?>
 
                 </td>
 
@@ -30,13 +54,13 @@
 
                 <th>
 
-                    Kota
+                    Kota / Kabupaten
 
                 </th>
 
                 <td>
 
-                    <?= $data['nama_kota'] ?>
+                    <?= htmlspecialchars($row['nama_kota'] ?? '-') ?>
 
                 </td>
 
@@ -46,19 +70,57 @@
 
                 <th>
 
-                    Kecamatan
+                    Nama Kecamatan
 
                 </th>
 
                 <td>
 
-                    <?= $data['nama_kecamatan'] ?>
+                    <?= htmlspecialchars($row['nama_kecamatan'] ?? '-') ?>
 
                 </td>
 
             </tr>
+
+            <?php if(isset($row['total_desa'])): ?>
+
+            <tr>
+
+                <th>
+
+                    Jumlah Desa/Kelurahan
+
+                </th>
+
+                <td>
+
+                    <span class="badge bg-primary">
+
+                        <?= htmlspecialchars($row['total_desa']) ?>
+
+                    </span>
+
+                </td>
+
+            </tr>
+
+            <?php endif; ?>
 
         </table>
+
+    </div>
+
+    <div class="card-footer bg-white text-end">
+
+        <a
+            href="?page=kecamatan"
+            class="btn btn-secondary rounded-pill">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Kembali
+
+        </a>
 
     </div>
 

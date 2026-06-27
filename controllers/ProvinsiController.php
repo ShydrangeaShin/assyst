@@ -54,26 +54,26 @@ class ProvinsiController
     include "views/layouts/app.php";
 }
 
-    /*
-    |--------------------------------------------------------------------------
-    | CREATE
-    |--------------------------------------------------------------------------
-    */
+    // /*
+    // |--------------------------------------------------------------------------
+    // | CREATE
+    // |--------------------------------------------------------------------------
+    // */
 
-    public function create()
-    {
-        $page_title = "Tambah Provinsi";
+    // public function create()
+    // {
+    //     $page_title = "Tambah Provinsi";
 
-        $breadcrumbs = [
-            "Master Wilayah",
-            "Provinsi",
-            "Tambah"
-        ];
+    //     $breadcrumbs = [
+    //         "Master Wilayah",
+    //         "Provinsi",
+    //         "Tambah"
+    //     ];
 
-        $content = "views/wilayah/provinsi/create.php";
+    //     $content = "views/wilayah/provinsi/create.php";
 
-        include "views/layouts/app.php";
-    }
+    //     include "views/layouts/app.php";
+    // }
 
     /*
     |--------------------------------------------------------------------------
@@ -101,6 +101,37 @@ class ProvinsiController
             header("Location:?page=provinsi");
             exit;
         }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Detail
+    |--------------------------------------------------------------------------
+    */
+
+    public function detail()
+    {
+        $id = $_GET['id'] ?? 0;
+
+        $provinsi = $this->model->find($id);
+
+        if (!$provinsi) {
+
+            header("Location:?page=provinsi");
+            exit;
+        }
+
+        $page_title = "Detail Provinsi";
+
+        $breadcrumbs = [
+            "Master Wilayah",
+            "Provinsi",
+            "Detail"
+        ];
+
+        $content = "views/wilayah/provinsi/detail.php";
+
+        include "views/layouts/app.php";
     }
 
     /*

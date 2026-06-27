@@ -1,16 +1,32 @@
-<div class="card">
+<?php
+$row = $kecamatan ?? $data ?? [];
+$selectedKota = $row['id_kota'] ?? $row['kota_id'] ?? '';
+$selectedProvinsi = $row['id_provinsi'] ?? $row['provinsi_id'] ?? '';
+$idKecamatan = $row['id_kecamatan'] ?? $row['id'] ?? '';
+?>
 
-    <div class="card-header">
+<div class="card shadow-sm border-0 rounded-4">
 
-        Edit Kecamatan
+    <div class="card-header bg-white">
+
+        <h4 class="fw-bold mb-0">
+
+            Edit Kecamatan
+
+        </h4>
 
     </div>
 
-    <div class="card-body">
+    <form
+        method="POST"
+        action="?page=kecamatan-update">
 
-        <form method="POST">
+        <div class="card-body">
 
-            <!-- PROVINSI -->
+            <input
+                type="hidden"
+                name="id_kecamatan"
+                value="<?= htmlspecialchars($idKecamatan) ?>">
 
             <div class="mb-3">
 
@@ -22,16 +38,18 @@
 
                 <select
                     id="provinsi"
-                    class="form-select">
+                    class="form-select"
+                    required>
 
-                    <?php foreach($provinsi as $row): ?>
+                    <?php foreach(($provinsi ?? []) as $item): ?>
+
+                        <?php $idProvinsi = $item['id_provinsi'] ?? $item['id'] ?? ''; ?>
 
                         <option
-                            value="<?= $row['id'] ?>"
-                            <?= $row['id']==$data['provinsi_id']
-                            ? 'selected' : '' ?>>
+                            value="<?= htmlspecialchars($idProvinsi) ?>"
+                            <?= ((string)$idProvinsi === (string)$selectedProvinsi) ? 'selected' : '' ?>>
 
-                            <?= $row['nama_provinsi'] ?>
+                            <?= htmlspecialchars($item['nama_provinsi'] ?? '') ?>
 
                         </option>
 
@@ -40,31 +58,31 @@
                 </select>
 
             </div>
-
-            <!-- KOTA -->
 
             <div class="mb-3">
 
                 <label class="form-label">
 
-                    Kota
+                    Kota / Kabupaten
 
                 </label>
 
                 <select
                     id="kota"
-                    name="kota_id"
-                    class="form-select">
+                    name="id_kota"
+                    class="form-select"
+                    required>
 
-                    <?php foreach($kota as $row): ?>
+                    <?php foreach(($kota ?? []) as $item): ?>
+
+                        <?php $idKota = $item['id_kota'] ?? $item['id'] ?? ''; ?>
 
                         <option
-                            value="<?= $row['id'] ?>"
-                            <?= $row['id']==$data['kota_id']
-                            ? 'selected':''
-                            ?>>
+                            value="<?= htmlspecialchars($idKota) ?>"
+                            data-provinsi="<?= htmlspecialchars($item['id_provinsi'] ?? '') ?>"
+                            <?= ((string)$idKota === (string)$selectedKota) ? 'selected' : '' ?>>
 
-                            <?= $row['nama_kota'] ?>
+                            <?= htmlspecialchars($item['nama_kota'] ?? '') ?>
 
                         </option>
 
@@ -73,8 +91,6 @@
                 </select>
 
             </div>
-
-            <!-- KECAMATAN -->
 
             <div class="mb-3">
 
@@ -88,19 +104,68 @@
                     type="text"
                     name="nama_kecamatan"
                     class="form-control"
-                    value="<?= $data['nama_kecamatan'] ?>">
+                    value="<?= htmlspecialchars($row['nama_kecamatan'] ?? '') ?>"
+                    required>
 
             </div>
 
-            <button
-                class="btn btn-warning">
+        </div>
 
-                Update
+        <div class="card-footer bg-white">
+
+            <a
+                href="?page=kecamatan"
+                class="btn btn-secondary">
+
+                Batal
+
+            </a>
+
+            <button class="btn btn-primary">
+
+                Simpan Perubahan
 
             </button>
 
-        </form>
+        </div>
 
-    </div>
+    </form>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const provinsiSelect = document.getElementById('provinsi');
+    const kotaSelect = document.getElementById('kota');
+    const selectedKota = '<?= htmlspecialchars((string)$selectedKota, ENT_QUOTES) ?>';
+
+    if (!provinsiSelect || !kotaSelect) {
+        return;
+    }
+
+    function filterKota(keepSelected) {
+        const provinsiId = provinsiSelect.value;
+
+        kotaSelect.disabled = provinsiId === '';
+
+        Array.from(kotaSelect.options).forEach(function(option) {
+            const match = option.dataset.provinsi === provinsiId;
+
+            option.hidden = !match;
+            option.disabled = !match;
+        });
+
+        if (keepSelected) {
+            kotaSelect.value = selectedKota;
+            return;
+        }
+
+        kotaSelect.value = '';
+    }
+
+    filterKota(true);
+    provinsiSelect.addEventListener('change', function() {
+        filterKota(false);
+    });
+});
+</script>

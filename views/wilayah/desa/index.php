@@ -1,40 +1,125 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
+<?php
+$rows = $desa ?? $data ?? [];
+?>
 
-    <div>
-        <h3>Data Desa / Kelurahan</h3>
-        <p class="text-muted">
-            Manajemen data desa dan kelurahan.
-        </p>
+<div class="card shadow-sm border-0 rounded-4">
+
+    <div class="card-header bg-white border-0 py-3">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+
+                <h4 class="fw-bold mb-1">
+
+                    Data Desa / Kelurahan
+
+                </h4>
+
+                <small class="text-muted">
+
+                    Manajemen data desa dan kelurahan berdasarkan Kecamatan.
+
+                </small>
+
+            </div>
+
+            <button
+                class="btn btn-primary rounded-pill"
+                data-bs-toggle="modal"
+                data-bs-target="#modalTambah">
+
+                <i class="bi bi-plus-circle me-1"></i>
+
+                Tambah Desa / Kelurahan
+
+            </button>
+
+        </div>
+
     </div>
 
-    <a href="?page=desa-create" class="btn btn-primary">
-
-        <i class="bi bi-plus-circle"></i>
-
-        Tambah Desa
-
-    </a>
-
-</div>
-
-<div class="card">
-
     <div class="card-body">
+
+        <form method="GET" class="mb-4">
+
+            <input
+                type="hidden"
+                name="page"
+                value="desa">
+
+            <div class="row">
+
+                <div class="col-md-5">
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+
+                            <i class="bi bi-search"></i>
+
+                        </span>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="search"
+                            placeholder="Cari desa atau kelurahan..."
+                            value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+
+                        <button
+                            class="btn btn-primary"
+                            type="submit">
+
+                            Cari
+
+                        </button>
+
+                        <?php if(isset($_GET['search'])): ?>
+
+                            <a
+                                href="?page=desa"
+                                class="btn btn-outline-secondary">
+
+                                Reset
+
+                            </a>
+
+                        <?php endif; ?>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </form>
 
         <div class="table-responsive">
 
             <table class="table table-hover align-middle">
 
-                <thead>
+                <thead class="table-light">
 
                     <tr>
 
-                        <th>No</th>
+                        <th width="70">No</th>
+
                         <th>Provinsi</th>
-                        <th>Kota</th>
+
+                        <th>Kota / Kabupaten</th>
+
                         <th>Kecamatan</th>
-                        <th>Desa</th>
-                        <th width="220">Aksi</th>
+
+                        <th>Jenis</th>
+
+                        <th>Nama</th>
+
+                        <th width="200" class="text-center">
+
+                            Aksi
+
+                        </th>
 
                     </tr>
 
@@ -42,53 +127,133 @@
 
                 <tbody>
 
-                    <?php $no=1; ?>
+                <?php if(empty($rows)): ?>
 
-                    <?php foreach($data as $row): ?>
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="text-center py-4 text-muted">
+
+                            Belum ada data desa/kelurahan.
+
+                        </td>
+
+                    </tr>
+
+                <?php else: ?>
+
+                    <?php $no = 1; ?>
+
+                    <?php foreach($rows as $row): ?>
+
+                    <?php
+                    $id = $row['id_desa'] ?? $row['id'] ?? '';
+                    $jenis = $row['jenis'] ?? 'Desa';
+                    $canDelete = $row['can_delete'] ?? true;
+                    ?>
 
                     <tr>
 
                         <td><?= $no++ ?></td>
 
-                        <td><?= $row['nama_provinsi'] ?></td>
+                        <td>
 
-                        <td><?= $row['nama_kota'] ?></td>
+                            <?= htmlspecialchars($row['nama_provinsi'] ?? '-') ?>
 
-                        <td><?= $row['nama_kecamatan'] ?></td>
-
-                        <td><?= $row['nama_desa'] ?></td>
+                        </td>
 
                         <td>
 
-                            <a
-                            href="?page=desa-detail&id=<?= $row['id'] ?>"
-                            class="btn btn-sm btn-info">
+                            <?= htmlspecialchars($row['nama_kota'] ?? '-') ?>
 
-                                Detail
+                        </td>
+
+                        <td>
+
+                            <?= htmlspecialchars($row['nama_kecamatan'] ?? '-') ?>
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge <?= $jenis === 'Kelurahan' ? 'bg-info' : 'bg-success' ?>">
+
+                                <?= htmlspecialchars($jenis) ?>
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <span class="fw-semibold">
+
+                                <?= htmlspecialchars($row['nama_desa'] ?? '-') ?>
+
+                            </span>
+
+                            <?php if(!$canDelete): ?>
+
+                                <span class="badge bg-warning text-dark ms-2">
+
+                                    Digunakan
+
+                                </span>
+
+                            <?php endif; ?>
+
+                        </td>
+
+                        <td class="text-center">
+
+                            <a
+                                href="?page=desa-detail&id=<?= $id ?>"
+                                class="btn btn-sm btn-outline-info rounded-pill">
+
+                                <i class="bi bi-eye"></i>
 
                             </a>
 
                             <a
-                            href="?page=desa-edit&id=<?= $row['id'] ?>"
-                            class="btn btn-sm btn-warning">
+                                href="?page=desa-edit&id=<?= $id ?>"
+                                class="btn btn-sm btn-outline-warning rounded-pill">
 
-                                Edit
-
-                            </a>
-
-                            <a
-                            href="?page=desa-delete&id=<?= $row['id'] ?>"
-                            class="btn btn-sm btn-danger">
-
-                                Hapus
+                                <i class="bi bi-pencil"></i>
 
                             </a>
+
+                            <?php if($canDelete): ?>
+
+                                <a
+                                    href="?page=desa-delete&id=<?= $id ?>"
+                                    onclick="return confirm('Hapus data desa/kelurahan ini?')"
+                                    class="btn btn-sm btn-outline-danger rounded-pill">
+
+                                    <i class="bi bi-trash"></i>
+
+                                </a>
+
+                            <?php else: ?>
+
+                                <button
+                                    class="btn btn-sm btn-outline-secondary rounded-pill"
+                                    disabled
+                                    title="Masih digunakan oleh data Keluarga">
+
+                                    <i class="bi bi-lock-fill"></i>
+
+                                </button>
+
+                            <?php endif; ?>
 
                         </td>
 
                     </tr>
 
                     <?php endforeach; ?>
+
+                <?php endif; ?>
 
                 </tbody>
 
@@ -99,3 +264,257 @@
     </div>
 
 </div>
+
+<div class="modal fade" id="modalTambah" tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content rounded-4">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    Tambah Desa / Kelurahan
+
+                </h5>
+
+                <button
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <form method="POST" action="?page=desa-store">
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Provinsi
+
+                        </label>
+
+                        <select
+                            id="modal_provinsi"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+
+                                -- Pilih Provinsi --
+
+                            </option>
+
+                            <?php foreach(($provinsi ?? []) as $item): ?>
+
+                                <option value="<?= $item['id_provinsi'] ?? $item['id'] ?>">
+
+                                    <?= htmlspecialchars($item['nama_provinsi'] ?? '') ?>
+
+                                </option>
+
+                            <?php endforeach; ?>
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Kota / Kabupaten
+
+                        </label>
+
+                        <select
+                            id="modal_kota"
+                            class="form-select"
+                            disabled
+                            required>
+
+                            <option value="">
+
+                                -- Pilih Kota / Kabupaten --
+
+                            </option>
+
+                            <?php foreach(($kota ?? []) as $item): ?>
+
+                                <option
+                                    value="<?= $item['id_kota'] ?? $item['id'] ?>"
+                                    data-provinsi="<?= $item['id_provinsi'] ?? '' ?>">
+
+                                    <?= htmlspecialchars($item['nama_kota'] ?? '') ?>
+
+                                </option>
+
+                            <?php endforeach; ?>
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Kecamatan
+
+                        </label>
+
+                        <select
+                            id="modal_kecamatan"
+                            name="id_kecamatan"
+                            class="form-select"
+                            disabled
+                            required>
+
+                            <option value="">
+
+                                -- Pilih Kecamatan --
+
+                            </option>
+
+                            <?php foreach(($kecamatan ?? []) as $item): ?>
+
+                                <option
+                                    value="<?= $item['id_kecamatan'] ?? $item['id'] ?>"
+                                    data-kota="<?= $item['id_kota'] ?? '' ?>">
+
+                                    <?= htmlspecialchars($item['nama_kecamatan'] ?? '') ?>
+
+                                </option>
+
+                            <?php endforeach; ?>
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Jenis
+
+                        </label>
+
+                        <select
+                            name="jenis"
+                            class="form-select"
+                            required>
+
+                            <option value="Desa">Desa</option>
+                            <option value="Kelurahan">Kelurahan</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Nama Desa / Kelurahan
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="nama_desa"
+                            class="form-control"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-light"
+                        data-bs-dismiss="modal">
+
+                        Batal
+
+                    </button>
+
+                    <button class="btn btn-primary">
+
+                        Simpan
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const provinsiSelect = document.getElementById('modal_provinsi');
+    const kotaSelect = document.getElementById('modal_kota');
+    const kecamatanSelect = document.getElementById('modal_kecamatan');
+
+    if (!provinsiSelect || !kotaSelect || !kecamatanSelect) {
+        return;
+    }
+
+    function filterKota() {
+        const provinsiId = provinsiSelect.value;
+
+        kotaSelect.value = '';
+        kotaSelect.disabled = provinsiId === '';
+
+        Array.from(kotaSelect.options).forEach(function(option) {
+            if (option.value === '') {
+                option.hidden = false;
+                option.disabled = false;
+                return;
+            }
+
+            const match = option.dataset.provinsi === provinsiId;
+
+            option.hidden = !match;
+            option.disabled = !match;
+        });
+
+        filterKecamatan();
+    }
+
+    function filterKecamatan() {
+        const kotaId = kotaSelect.value;
+
+        kecamatanSelect.value = '';
+        kecamatanSelect.disabled = kotaId === '';
+
+        Array.from(kecamatanSelect.options).forEach(function(option) {
+            if (option.value === '') {
+                option.hidden = false;
+                option.disabled = false;
+                return;
+            }
+
+            const match = option.dataset.kota === kotaId;
+
+            option.hidden = !match;
+            option.disabled = !match;
+        });
+    }
+
+    filterKota();
+    provinsiSelect.addEventListener('change', filterKota);
+    kotaSelect.addEventListener('change', filterKecamatan);
+});
+</script>

@@ -9,15 +9,11 @@
             <div class="text-center">
 
                 <h1 class="display-4 fw-bold text-primary">
-
                     AsSyst
-
                 </h1>
 
                 <p class="lead">
-
                     Assistance System
-
                 </p>
 
                 <p>

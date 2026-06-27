@@ -28,6 +28,44 @@ class DashboardController
         return (int)$row[0];
     }
 
+    private function getRow($sql)
+    {
+        $result = mysqli_query($this->conn, $sql);
+
+        if (!$result) {
+            return [];
+        }
+
+        return mysqli_fetch_assoc($result);
+    }
+
+    private function buildWhereClause()
+    {
+        $where = [];
+
+        if (!empty($_GET['id_provinsi'])) {
+            $where[] = "k.id_provinsi=" . (int)$_GET['id_provinsi'];
+        }
+
+        if (!empty($_GET['id_kota'])) {
+            $where[] = "k.id_kota=" . (int)$_GET['id_kota'];
+        }
+
+        if (!empty($_GET['id_kecamatan'])) {
+            $where[] = "k.id_kecamatan=" . (int)$_GET['id_kecamatan'];
+        }
+
+        if (!empty($_GET['id_desa'])) {
+            $where[] = "k.id_desa=" . (int)$_GET['id_desa'];
+        }
+
+        if(count($where)==0){
+            return "";
+        }
+
+        return " WHERE ".implode(" AND ",$where);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Dashboard Admin
@@ -121,6 +159,7 @@ class DashboardController
 
     public function publik()
     {
+        $page_title = "Dashboard Publik";
 
         /*
         |--------------------------------------------------------------------------
@@ -128,10 +167,82 @@ class DashboardController
         |--------------------------------------------------------------------------
         */
 
-        $provinsi = mysqli_query(
+        $provinsiResult = mysqli_query(
             $this->conn,
             "SELECT * FROM provinsi ORDER BY nama_provinsi ASC"
         );
+
+        $provinsi = [];
+
+        while ($row = mysqli_fetch_assoc($provinsiResult)) {
+            $provinsi[] = $row;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Dropdown Kota
+        |--------------------------------------------------------------------------
+        */
+
+        $kotaResult = mysqli_query(
+            $this->conn,
+            "SELECT id_kota, id_provinsi, nama_kota FROM kota ORDER BY nama_kota ASC"
+        );
+
+        $kota = [];
+
+        while ($row = mysqli_fetch_assoc($kotaResult)) {
+            $kota[] = $row;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Dropdown Kecamatan
+        |--------------------------------------------------------------------------
+        */
+
+        $kecamatanResult = mysqli_query(
+            $this->conn,
+            "
+            SELECT
+                id_kecamatan,
+                id_kota,
+                nama_kecamatan
+            FROM kecamatan
+            ORDER BY nama_kecamatan ASC
+            "
+        );
+
+        $kecamatan = [];
+
+        while ($row = mysqli_fetch_assoc($kecamatanResult)) {
+            $kecamatan[] = $row;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Dropdown Desa / Kelurahan
+        |--------------------------------------------------------------------------
+        */
+
+        $desaResult = mysqli_query(
+            $this->conn,
+            "
+            SELECT
+                id_desa,
+                id_kecamatan,
+                nama_desa
+            FROM desa
+            ORDER BY nama_desa ASC
+            "
+        );
+
+        $desa = [];
+
+        while ($row = mysqli_fetch_assoc($desaResult)) {
+            $desa[] = $row;
+        }
+
 
         /*
         |--------------------------------------------------------------------------
@@ -144,24 +255,28 @@ class DashboardController
         $id_kecamatan = $_GET['id_kecamatan'] ?? '';
         $id_desa      = $_GET['id_desa'] ?? '';
 
-        $where = "";
+        $where = [];
 
-        if ($id_desa != "") {
+        if ($id_provinsi != '') {
+            $where[] = "k.id_provinsi=".(int)$id_provinsi;
+        }
 
-            $where = " WHERE k.id_desa = " . (int)$id_desa;
+        if ($id_kota != '') {
+            $where[] = "k.id_kota=".(int)$id_kota;
+        }
 
-        } elseif ($id_kecamatan != "") {
+        if ($id_kecamatan != '') {
+            $where[] = "k.id_kecamatan=".(int)$id_kecamatan;
+        }
 
-            $where = " WHERE k.id_kecamatan = " . (int)$id_kecamatan;
+        if ($id_desa != '') {
+            $where[] = "k.id_desa=".(int)$id_desa;
+        }
 
-        } elseif ($id_kota != "") {
+        $whereSQL = "";
 
-            $where = " WHERE k.id_kota = " . (int)$id_kota;
-
-        } elseif ($id_provinsi != "") {
-
-            $where = " WHERE k.id_provinsi = " . (int)$id_provinsi;
-
+        if(count($where)>0){
+            $whereSQL = " WHERE ".implode(" AND ",$where);
         }
 
         /*
@@ -173,52 +288,133 @@ class DashboardController
         $totalKeluarga = $this->getCount("
             SELECT COUNT(k.id_keluarga)
             FROM keluarga k
-            $where
+            $whereSQL
         ");
 
-        $totalLayak = $this->getCount("
-            SELECT COUNT(h.id_hasil)
+        $sql = "
 
+        SELECT SUM(h.status_hasil='LAYAK') layak, SUM(h.status_hasil='TIDAK LAYAK') tidak_layak,
+        SUM(h.status_hasil='PERLU VERIFIKASI') verifikasi
+        FROM hasil_penalaran h
+        JOIN keluarga k
+        ON h.id_keluarga=k.id_keluarga
+        $whereSQL
+        ";
+
+    $hasil = $this->getRow($sql);
+
+    $totalLayak = (int)($hasil['layak'] ?? 0);
+        $totalTidakLayak = (int)($hasil['tidak_layak'] ?? 0);
+        $totalVerifikasi = (int)($hasil['verifikasi'] ?? 0);
+
+        // Bagian kode yang di-comment telah dihapus untuk menjaga kebersihan kode.
+
+        $namaProvinsi = '';
+        $namaKota = '';
+        $namaKecamatan = '';
+        $namaDesa = '';
+
+        if($id_provinsi){
+
+            $row = $this->getRow("
+            SELECT nama_provinsi
+            FROM provinsi
+            WHERE id_provinsi=$id_provinsi
+            ");
+
+            $namaProvinsi=$row['nama_provinsi'];
+        }
+
+        if($id_kota){
+
+            $row = $this->getRow("
+            SELECT nama_kota
+            FROM kota
+            WHERE id_kota=$id_kota
+            ");
+
+            $namaKota=$row['nama_kota'];
+        }
+
+        if($id_kecamatan){
+
+            $row = $this->getRow("
+            SELECT nama_kecamatan
+            FROM kecamatan
+            WHERE id_kecamatan=$id_kecamatan
+            ");
+
+            $namaKecamatan=$row['nama_kecamatan'];
+        }
+
+        if($id_desa){
+
+            $row = $this->getRow("
+            SELECT nama_desa
+            FROM desa
+            WHERE id_desa=$id_desa
+            ");
+
+            $namaDesa=$row['nama_desa'];
+        }
+
+        $totalKeputusan =
+            $totalLayak +
+            $totalTidakLayak +
+            $totalVerifikasi;
+
+        $persenLayak =
+            $totalKeputusan > 0
+            ? round(($totalLayak / $totalKeputusan) * 100, 1)
+            : 0;
+
+        $persenTidakLayak =
+            $totalKeputusan > 0
+            ? round(($totalTidakLayak / $totalKeputusan) * 100, 1)
+            : 0;
+
+        $persenVerifikasi =
+            $totalKeputusan > 0
+            ? round(($totalVerifikasi / $totalKeputusan) * 100, 1)
+            : 0;
+
+        $whereRanking = "h.status_hasil='LAYAK'";
+        if (count($where) > 0) {
+            $whereRanking .= " AND " . implode(" AND ", $where);
+        }
+
+        // 1. Terapkan Filter pada Query Ranking secara aman
+        $filterWilayah = '';
+        if (!empty($whereSQL)) {
+            // Mengubah awalan "WHERE " dari $whereSQL menjadi " AND " 
+            // agar dapat digabung dengan kondisi h.status_hasil = 'LAYAK'
+            $filterWilayah = str_ireplace('WHERE ', ' AND ', $whereSQL);
+        }
+
+        $ranking = mysqli_query($this->conn, "
+            SELECT 
+                kc.nama_kecamatan, 
+                COUNT(*) as jumlah
             FROM hasil_penalaran h
-
-            JOIN keluarga k
-            ON h.id_keluarga = k.id_keluarga
-
-            $where
-
-            " . ($where == "" ? "WHERE" : "AND") . "
-
-            h.status_hasil='LAYAK'
+            JOIN keluarga k ON h.id_keluarga = k.id_keluarga
+            JOIN kecamatan kc ON kc.id_kecamatan = k.id_kecamatan
+            WHERE h.status_hasil = 'LAYAK' $filterWilayah
+            GROUP BY kc.id_kecamatan
+            ORDER BY jumlah DESC
+            LIMIT 5
         ");
 
-        $totalTidakLayak = $this->getCount("
-            SELECT COUNT(h.id_hasil)
-
-            FROM hasil_penalaran h
-
-            JOIN keluarga k
-            ON h.id_keluarga = k.id_keluarga
-
-            $where
-
-            " . ($where == "" ? "WHERE" : "AND") . "
-
-            h.status_hasil='TIDAK LAYAK'
-        ");
-
-        $totalVerifikasi = $this->getCount("
-            SELECT COUNT(h.id_hasil)
-
-            FROM hasil_penalaran h
-
-            JOIN keluarga k
-            ON h.id_keluarga = k.id_keluarga
-
-            $where
-
-            " . ($where == "" ? "WHERE" : "AND") . "
-
-            h.status_hasil='PERLU VERIFIKASI'
+        // 2. Terapkan Filter pada Query Statistik Wilayah
+        $statistikWilayah = mysqli_query($this->conn, "
+            SELECT 
+                d.nama_desa, 
+                COUNT(k.id_keluarga) as total
+            FROM keluarga k
+            JOIN desa d ON d.id_desa = k.id_desa
+            $whereSQL
+            GROUP BY d.id_desa
+            ORDER BY total DESC
+            LIMIT 10
         ");
 
         /*

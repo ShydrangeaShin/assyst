@@ -1,26 +1,34 @@
-<div class="card">
+<?php
+$row = $desa ?? $data ?? [];
+?>
 
-    <div class="card-header">
+<div class="card shadow-sm border-0 rounded-4">
 
-        Detail Desa / Kelurahan
+    <div class="card-header bg-white">
+
+        <h4 class="fw-bold mb-0">
+
+            Detail Desa / Kelurahan
+
+        </h4>
 
     </div>
 
     <div class="card-body">
 
-        <table class="table">
+        <table class="table table-borderless">
 
             <tr>
 
-                <th width="200">
+                <th width="220">
 
-                    Provinsi
+                    ID Desa/Kelurahan
 
                 </th>
 
                 <td>
 
-                    <?= $data['nama_provinsi'] ?>
+                    <?= htmlspecialchars($row['id_desa'] ?? $row['id'] ?? '-') ?>
 
                 </td>
 
@@ -30,13 +38,29 @@
 
                 <th>
 
-                    Kota
+                    Provinsi
 
                 </th>
 
                 <td>
 
-                    <?= $data['nama_kota'] ?>
+                    <?= htmlspecialchars($row['nama_provinsi'] ?? '-') ?>
+
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <th>
+
+                    Kota / Kabupaten
+
+                </th>
+
+                <td>
+
+                    <?= htmlspecialchars($row['nama_kota'] ?? '-') ?>
 
                 </td>
 
@@ -52,7 +76,7 @@
 
                 <td>
 
-                    <?= $data['nama_kecamatan'] ?>
+                    <?= htmlspecialchars($row['nama_kecamatan'] ?? '-') ?>
 
                 </td>
 
@@ -62,19 +86,73 @@
 
                 <th>
 
-                    Desa
+                    Jenis
 
                 </th>
 
                 <td>
 
-                    <?= $data['nama_desa'] ?>
+                    <?= htmlspecialchars($row['jenis'] ?? '-') ?>
 
                 </td>
 
             </tr>
 
+            <tr>
+
+                <th>
+
+                    Nama Desa/Kelurahan
+
+                </th>
+
+                <td>
+
+                    <?= htmlspecialchars($row['nama_desa'] ?? '-') ?>
+
+                </td>
+
+            </tr>
+
+            <?php if(isset($row['total_keluarga'])): ?>
+
+            <tr>
+
+                <th>
+
+                    Jumlah Keluarga
+
+                </th>
+
+                <td>
+
+                    <span class="badge bg-primary">
+
+                        <?= htmlspecialchars($row['total_keluarga']) ?>
+
+                    </span>
+
+                </td>
+
+            </tr>
+
+            <?php endif; ?>
+
         </table>
+
+    </div>
+
+    <div class="card-footer bg-white text-end">
+
+        <a
+            href="?page=desa"
+            class="btn btn-secondary rounded-pill">
+
+            <i class="bi bi-arrow-left"></i>
+
+            Kembali
+
+        </a>
 
     </div>
 

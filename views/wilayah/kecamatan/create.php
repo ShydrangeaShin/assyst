@@ -1,16 +1,20 @@
-<div class="card">
+<div class="card shadow-sm border-0 rounded-4">
 
-    <div class="card-header">
+    <div class="card-header bg-white">
 
-        Tambah Kecamatan
+        <h4 class="fw-bold mb-0">
+
+            Tambah Kecamatan
+
+        </h4>
 
     </div>
 
-    <div class="card-body">
+    <form
+        method="POST"
+        action="?page=kecamatan-store">
 
-        <form method="POST">
-
-            <!-- PROVINSI -->
+        <div class="card-body">
 
             <div class="mb-3">
 
@@ -26,14 +30,16 @@
                     required>
 
                     <option value="">
-                        Pilih Provinsi
+
+                        -- Pilih Provinsi --
+
                     </option>
 
-                    <?php foreach($provinsi as $row): ?>
+                    <?php foreach(($provinsi ?? []) as $row): ?>
 
-                        <option value="<?= $row['id'] ?>">
+                        <option value="<?= $row['id_provinsi'] ?? $row['id'] ?>">
 
-                            <?= $row['nama_provinsi'] ?>
+                            <?= htmlspecialchars($row['nama_provinsi'] ?? '') ?>
 
                         </option>
 
@@ -42,8 +48,6 @@
                 </select>
 
             </div>
-
-            <!-- KOTA -->
 
             <div class="mb-3">
 
@@ -55,19 +59,32 @@
 
                 <select
                     id="kota"
-                    name="kota_id"
+                    name="id_kota"
                     class="form-select"
+                    disabled
                     required>
 
                     <option value="">
-                        Pilih Kota
+
+                        -- Pilih Kota / Kabupaten --
+
                     </option>
+
+                    <?php foreach(($kota ?? []) as $row): ?>
+
+                        <option
+                            value="<?= $row['id_kota'] ?? $row['id'] ?>"
+                            data-provinsi="<?= $row['id_provinsi'] ?? '' ?>">
+
+                            <?= htmlspecialchars($row['nama_kota'] ?? '') ?>
+
+                        </option>
+
+                    <?php endforeach; ?>
 
                 </select>
 
             </div>
-
-            <!-- NAMA KECAMATAN -->
 
             <div class="mb-3">
 
@@ -85,16 +102,60 @@
 
             </div>
 
-            <button
-                type="submit"
-                class="btn btn-primary">
+        </div>
+
+        <div class="card-footer bg-white">
+
+            <a
+                href="?page=kecamatan"
+                class="btn btn-secondary">
+
+                Batal
+
+            </a>
+
+            <button class="btn btn-primary">
 
                 Simpan
 
             </button>
 
-        </form>
+        </div>
 
-    </div>
+    </form>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const provinsiSelect = document.getElementById('provinsi');
+    const kotaSelect = document.getElementById('kota');
+
+    if (!provinsiSelect || !kotaSelect) {
+        return;
+    }
+
+    function filterKota() {
+        const provinsiId = provinsiSelect.value;
+
+        kotaSelect.value = '';
+        kotaSelect.disabled = provinsiId === '';
+
+        Array.from(kotaSelect.options).forEach(function(option) {
+            if (option.value === '') {
+                option.hidden = false;
+                option.disabled = false;
+                return;
+            }
+
+            const match = option.dataset.provinsi === provinsiId;
+
+            option.hidden = !match;
+            option.disabled = !match;
+        });
+    }
+
+    filterKota();
+    provinsiSelect.addEventListener('change', filterKota);
+});
+</script>
