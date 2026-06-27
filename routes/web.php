@@ -13,6 +13,9 @@ require_once 'controllers/UserController.php';
 require_once 'controllers/TugasController.php';
 require_once 'controllers/LaporanController.php';
 require_once 'controllers/LogController.php';
+require_once 'controllers/KeluargaController.php';
+require_once 'controllers/KondisiController.php';
+require_once 'controllers/VerifikasiController.php';
 
 $auth = new AuthController($conn);
 $dashboard = new DashboardController($conn);
@@ -508,6 +511,95 @@ switch ($page) {
         onlyAdmin(); // Pastikan fungsi helper ini sudah ada, atau ganti dengan validasi session admin
         $controller = new LogController($conn);
         $controller->index();
+        break;
+
+/*
+    |--------------------------------------------------------------------------
+    | VERIFIKASI & PENALARAN (KHUSUS ADMIN)
+    |--------------------------------------------------------------------------
+    */
+    case 'verifikasi':
+        onlyAdmin();
+        $controller = new VerifikasiController($conn);
+        $controller->index();
+        break;
+
+    case 'verifikasi-detail':
+        onlyAdmin();
+        $controller = new VerifikasiController($conn);
+        $controller->detail($_GET['id']);
+        break;
+
+    case 'verifikasi-update':
+        onlyAdmin();
+        $controller = new VerifikasiController($conn);
+        $controller->update();
+        break;
+        
+    // PETUGAS ROUTES
+
+    /*
+    |--------------------------------------------------------------------------
+    | MANAJEMEN DATA KELUARGA
+    |--------------------------------------------------------------------------
+    */
+    case 'keluarga':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new KeluargaController($conn);
+        $controller->index();
+        break;
+
+    case 'keluarga-store':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new KeluargaController($conn);
+        $controller->store();
+        break;
+
+    case 'keluarga-detail':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new KeluargaController($conn);
+        $controller->detail($_GET['id']);
+        break;
+
+    case 'keluarga-edit':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new KeluargaController($conn);
+        $controller->edit($_GET['id']);
+        break;
+
+    case 'keluarga-update':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new KeluargaController($conn);
+        $controller->update();
+        break;
+
+    case 'keluarga-delete':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new KeluargaController($conn);
+        $controller->delete($_GET['id']);
+        break;
+    
+    /*
+    |--------------------------------------------------------------------------
+    | MANAJEMEN KONDISI SOSIAL KELUARGA
+    |--------------------------------------------------------------------------
+    */
+    case 'kondisi':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new KondisiController($conn);
+        $controller->index();
+        break;
+
+    case 'kondisi-edit':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new KondisiController($conn);
+        $controller->edit($_GET['id']);
+        break;
+
+    case 'kondisi-update':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new KondisiController($conn);
+        $controller->update();
         break;
 
     /*

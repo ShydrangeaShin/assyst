@@ -91,6 +91,17 @@ $currentPage = $_GET['page'] ?? '';
                 </a>
             </li>
 
+            <!-- VALIDASI & PENALARAN -->
+            <li class="menu-title">
+                Validasi & Keputusan
+            </li>
+            <li class="nav-item mb-1">
+                <a class="nav-link <?= ($currentPage=='verifikasi' || $currentPage=='verifikasi-detail') ? 'active' : '' ?>" href="?page=verifikasi">
+                    <i class="bi bi-patch-check"></i>
+                    Verifikasi Data Survei
+                </a>
+            </li>
+
             <li class="nav-item mb-1">
                 <a class="nav-link <?= ($currentPage=='laporan') ? 'active' : '' ?>" href="?page=laporan">
                     <i class="bi bi-file-earmark-spreadsheet"></i>
@@ -114,32 +125,19 @@ $currentPage = $_GET['page'] ?? '';
             </li>
 
             <li class="nav-item mb-1">
-                <a class="nav-link <?= $currentPage=='keluarga' ? 'active' : '' ?>" href="?page=keluarga">
-                    <i class="bi bi-house"></i>
+                <a class="nav-link <?= ($currentPage=='keluarga' || $currentPage=='keluarga-edit' || $currentPage=='keluarga-detail') ? 'active' : '' ?>" href="?page=keluarga">
+                    <i class="bi bi-people"></i>
                     Data Keluarga
                 </a>
             </li>
 
             <li class="nav-item mb-1">
-                <a class="nav-link <?= $currentPage=='kondisi' ? 'active' : '' ?>" href="?page=kondisi">
-                    <i class="bi bi-card-checklist"></i>
+                <a class="nav-link <?= ($currentPage=='kondisi' || $currentPage=='kondisi-edit') ? 'active' : '' ?>" href="?page=kondisi">
+                    <i class="bi bi-clipboard-heart"></i>
                     Kondisi Sosial
                 </a>
             </li>
 
-            <li class="nav-item mb-1">
-                <a class="nav-link <?= $currentPage=='verifikasi' ? 'active' : '' ?>" href="?page=verifikasi">
-                    <i class="bi bi-patch-check"></i>
-                    Verifikasi
-                </a>
-            </li>
-
-            <li class="nav-item mb-1">
-                <a class="nav-link <?= $currentPage=='penalaran' ? 'active' : '' ?>" href="?page=penalaran">
-                    <i class="bi bi-diagram-3"></i>
-                    Hasil Penalaran
-                </a>
-            </li>
 
             <li class="nav-item mb-1">
                 <a class="nav-link <?= $currentPage=='tugas' ? 'active' : '' ?>" href="?page=tugas">
