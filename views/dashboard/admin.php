@@ -16,8 +16,8 @@ $persenSelesai = $totalKeluarga > 0 ? round(($totalKeputusan / $totalKeluarga) *
             <div class="card border-0 shadow-sm position-relative overflow-hidden" style="border-radius: 16px;">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h6 class="text-muted fw-bold mb-0" style="font-size: 0.85rem; letter-spacing: 0.5px;">PETUGAS LAPANGAN ACTIVE</h6>
-                        <span class="badge bg-info-light text-info rounded-pill px-2 py-1 small" style="background-color: #E0F7FA; color: #006064;">Role 2</span>
+                        <h6 class="text-muted fw-bold mb-0" style="font-size: 0.85rem; letter-spacing: 0.5px;">PETUGAS LAPANGAN AKTIF</h6>
+                        <span class="badge bg-info-light text-info rounded-pill px-2 py-1 small" style="background-color: #E0F7FA; color: #006064;">Petugas</span>
                     </div>
                     <h2 class="fw-bold mb-1" style="color: var(--text);"><?= number_format($totalPetugas) ?></h2>
                     <p class="text-muted small mb-0"><i class="bi bi-person-badge text-info me-1"></i> Personel terdaftar sistem</p>
@@ -30,7 +30,7 @@ $persenSelesai = $totalKeluarga > 0 ? round(($totalKeputusan / $totalKeluarga) *
             <div class="card border-0 shadow-sm position-relative overflow-hidden" style="border-radius: 16px;">
                 <div class="card-body p-4">
                     <div class="d-flex align-items-center justify-content-between mb-2">
-                        <h6 class="text-muted fw-bold mb-0" style="font-size: 0.85rem; letter-spacing: 0.5px;">CAKUPAN WILAYAH GLOBAL</h6>
+                        <h6 class="text-muted fw-bold mb-0" style="font-size: 0.85rem; letter-spacing: 0.5px;">CAKUPAN WILAYAH NASIONAL</h6>
                         <span class="badge rounded-pill px-2 py-1 small" style="background-color: #F3E5F5; color: #4A148C;">Hierarki</span>
                     </div>
                     <h2 class="fw-bold mb-1" style="color: var(--text);"><?= number_format($totalWilayah) ?></h2>
