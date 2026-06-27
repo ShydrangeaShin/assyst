@@ -92,16 +92,16 @@ $currentPage = $_GET['page'] ?? '';
             </li>
 
             <li class="nav-item mb-1">
-                <a class="nav-link <?= $currentPage=='laporan' ? 'active' : '' ?>" href="?page=laporan">
-                    <i class="bi bi-file-earmark-text"></i>
-                    Laporan
+                <a class="nav-link <?= ($currentPage=='laporan') ? 'active' : '' ?>" href="?page=laporan">
+                    <i class="bi bi-file-earmark-spreadsheet"></i>
+                    Laporan Data
                 </a>
             </li>
 
             <li class="nav-item mb-1">
-                <a class="nav-link <?= $currentPage=='log' ? 'active' : '' ?>" href="?page=log">
+                <a class="nav-link <?= ($currentPage=='log') ? 'active' : '' ?>" href="?page=log">
                     <i class="bi bi-clock-history"></i>
-                    Log Aktivitas
+                    Log Sistem
                 </a>
             </li>
 

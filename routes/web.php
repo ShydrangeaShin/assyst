@@ -11,6 +11,8 @@ require_once 'controllers/KecamatanController.php';
 require_once 'controllers/DesaController.php';
 require_once 'controllers/UserController.php';
 require_once 'controllers/TugasController.php';
+require_once 'controllers/LaporanController.php';
+require_once 'controllers/LogController.php';
 
 $auth = new AuthController($conn);
 $dashboard = new DashboardController($conn);
@@ -426,7 +428,6 @@ switch ($page) {
         $controller->index();
         break;
 
-
     case 'user-store':
         onlyAdmin();
         $controller = new UserController($conn);
@@ -484,6 +485,29 @@ switch ($page) {
         onlyAdmin(); // Hanya admin yang boleh menghapus
         $controller = new TugasController($conn);
         $controller->delete($_GET['id']);
+        break;
+
+    /*
+    |--------------------------------------------------------------------------
+    | LAPORAN / REPORTING
+    |--------------------------------------------------------------------------
+    */
+    case 'laporan':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new LaporanController($conn);
+        $controller->index();
+        break;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | LOG AKTIVITAS / SYSTEM AUDIT
+    |--------------------------------------------------------------------------
+    */
+    case 'log':
+        onlyAdmin(); // Pastikan fungsi helper ini sudah ada, atau ganti dengan validasi session admin
+        $controller = new LogController($conn);
+        $controller->index();
         break;
 
     /*
