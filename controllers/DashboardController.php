@@ -75,62 +75,89 @@ class DashboardController
     public function admin()
     {
         $page_title = "Dashboard Admin";
-
         $breadcrumbs = ["Dashboard"];
 
+        // 1. Data Referensi Dropdown Wilayah
+        $provinsiResult = mysqli_query($this->conn, "SELECT * FROM provinsi ORDER BY nama_provinsi ASC");
+        $provinsi = [];
+        while ($row = mysqli_fetch_assoc($provinsiResult)) { $provinsi[] = $row; }
+
+        $kotaResult = mysqli_query($this->conn, "SELECT id_kota, id_provinsi, nama_kota FROM kota ORDER BY nama_kota ASC");
+        $kota = [];
+        while ($row = mysqli_fetch_assoc($kotaResult)) { $kota[] = $row; }
+
+        $kecamatanResult = mysqli_query($this->conn, "SELECT id_kecamatan, id_kota, nama_kecamatan FROM kecamatan ORDER BY nama_kecamatan ASC");
+        $kecamatan = [];
+        while ($row = mysqli_fetch_assoc($kecamatanResult)) { $kecamatan[] = $row; }
+
+        $desaResult = mysqli_query($this->conn, "SELECT id_desa, id_kecamatan, nama_desa FROM desa ORDER BY nama_desa ASC");
+        $desa = [];
+        while ($row = mysqli_fetch_assoc($desaResult)) { $desa[] = $row; }
+
+        // 2. Pemrosesan Parameter Filter (Request GET)
+        $id_provinsi  = $_GET['id_provinsi'] ?? '';
+        $id_kota      = $_GET['id_kota'] ?? '';
+        $id_kecamatan = $_GET['id_kecamatan'] ?? '';
+        $id_desa      = $_GET['id_desa'] ?? '';
+
+        $where = [];
+        if ($id_provinsi != '') $where[] = "k.id_provinsi=" . (int)$id_provinsi;
+        if ($id_kota != '') $where[] = "k.id_kota=" . (int)$id_kota;
+        if ($id_kecamatan != '') $where[] = "k.id_kecamatan=" . (int)$id_kecamatan;
+        if ($id_desa != '') $where[] = "k.id_desa=" . (int)$id_desa;
+
+        $whereSQL = "";
+        if (count($where) > 0) {
+            $whereSQL = " WHERE " . implode(" AND ", $where);
+        }
+
+        // 3. Statistik Global (Tetap statis/tidak terpengaruh filter)
         $totalProvinsi  = $this->getCount("SELECT COUNT(id_provinsi) FROM provinsi");
         $totalKota      = $this->getCount("SELECT COUNT(id_kota) FROM kota");
         $totalKecamatan = $this->getCount("SELECT COUNT(id_kecamatan) FROM kecamatan");
         $totalDesa      = $this->getCount("SELECT COUNT(id_desa) FROM desa");
+        $totalWilayah   = $totalProvinsi + $totalKota + $totalKecamatan + $totalDesa;
 
-        $data = [
+        $totalPetugas = $this->getCount("SELECT COUNT(id_user) FROM users WHERE id_role = 2");
 
-            "totalWilayah" =>
-                $totalProvinsi +
-                $totalKota +
-                $totalKecamatan +
-                $totalDesa,
+        // 4. Statistik Analitik Terfilter
+        $totalKeluarga = $this->getCount("
+            SELECT COUNT(k.id_keluarga)
+            FROM keluarga k
+            $whereSQL
+        ");
 
-            "totalPetugas" =>
-                $this->getCount("
-                    SELECT COUNT(id_user)
-                    FROM users
-                    WHERE id_role = 2
-                "),
+        $sqlHasil = "
+            SELECT 
+                SUM(h.status_hasil='LAYAK') as layak, 
+                SUM(h.status_hasil='TIDAK LAYAK') as tidak_layak,
+                SUM(h.status_hasil='PERLU VERIFIKASI') as verifikasi
+            FROM hasil_penalaran h
+            JOIN keluarga k ON h.id_keluarga = k.id_keluarga
+            $whereSQL
+        ";
+        
+        $hasil = $this->getRow($sqlHasil);
+        
+        $totalLayak      = (int)($hasil['layak'] ?? 0);
+        $totalTidakLayak = (int)($hasil['tidak_layak'] ?? 0);
+        $totalVerifikasi = (int)($hasil['verifikasi'] ?? 0);
 
-            "totalKeluarga" =>
-                $this->getCount("
-                    SELECT COUNT(id_keluarga)
-                    FROM keluarga
-                "),
-
-            "totalLayak" =>
-                $this->getCount("
-                    SELECT COUNT(id_hasil)
-                    FROM hasil_penalaran
-                    WHERE status_hasil='LAYAK'
-                "),
-
-            "totalTidakLayak" =>
-                $this->getCount("
-                    SELECT COUNT(id_hasil)
-                    FROM hasil_penalaran
-                    WHERE status_hasil='TIDAK LAYAK'
-                "),
-
-            "totalVerifikasi" =>
-                $this->getCount("
-                    SELECT COUNT(id_hasil)
-                    FROM hasil_penalaran
-                    WHERE status_hasil='PERLU VERIFIKASI'
-                ")
-
-        ];
-
-        extract($data);
+        // 5. Query Log Aktivitas Terakhir (5 Data Teratas)
+        $logTerbaru = mysqli_query($this->conn, "
+            SELECT 
+                k.id_keluarga,
+                d.nama_desa,
+                h.status_hasil
+            FROM keluarga k
+            LEFT JOIN hasil_penalaran h ON k.id_keluarga = h.id_keluarga
+            JOIN desa d ON k.id_desa = d.id_desa
+            $whereSQL
+            ORDER BY k.id_keluarga DESC
+            LIMIT 5
+        ");
 
         $content = "views/dashboard/admin.php";
-
         include "views/layouts/app.php";
     }
 
