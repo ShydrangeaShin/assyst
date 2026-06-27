@@ -84,20 +84,16 @@ class ProvinsiController
     public function store()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
             $nama = trim($_POST['nama_provinsi']);
 
             if ($nama == '') {
-
                 $_SESSION['error'] = "Nama provinsi wajib diisi.";
-
-                header("Location:?page=provinsi-create");
+                header("Location:?page=provinsi"); // <-- Perubahan di sini
                 exit;
             }
 
             $this->model->insert($nama);
             $_SESSION['success'] = "Data berhasil ditambahkan.";
-
             header("Location:?page=provinsi");
             exit;
         }

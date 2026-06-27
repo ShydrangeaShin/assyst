@@ -14,146 +14,86 @@ class KotaController
         $this->provinsi = new Provinsi($db);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Index
-    |--------------------------------------------------------------------------
-    */
-
     public function index()
     {
         $page_title = "Data Kota";
-
-        $breadcrumbs = [
-            "Master Wilayah",
-            "Kota"
-        ];
-
+        $breadcrumbs = ["Master Wilayah", "Kota"];
         $search = $_GET['search'] ?? '';
-
+        
         $result = $this->kota->getAll($search);
-
         $kota = [];
 
         while ($row = mysqli_fetch_assoc($result)) {
-
-            $row['can_delete'] =
-                $this->kota->canDelete(
-                    $row['id_kota']
-                );
-
+            $row['can_delete'] = $this->kota->canDelete($row['id_kota']);
             $kota[] = $row;
         }
 
         $provinsi = $this->provinsi->getAll();
-
-        $content =
-            "views/wilayah/kota/index.php";
-
-        include
-            "views/layouts/app.php";
+        $content = "views/wilayah/kota/index.php";
+        include "views/layouts/app.php";
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Store
-    |--------------------------------------------------------------------------
-    */
 
     public function store()
     {
-        $this->kota->insert($_POST);
-
-        header("Location:?page=kota");
-
-        exit;
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (empty($_POST['nama_kota']) || empty($_POST['id_provinsi'])) {
+                $_SESSION['error'] = "Provinsi dan Nama Kota wajib diisi.";
+            } else {
+                $this->kota->insert($_POST);
+                $_SESSION['success'] = "Data kota/kabupaten berhasil ditambahkan.";
+            }
+            header("Location:?page=kota");
+            exit;
+        }
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Detail
-    |--------------------------------------------------------------------------
-    */
 
     public function detail($id)
     {
         $page_title = "Detail Kota";
-
-        $breadcrumbs = [
-            "Master Wilayah",
-            "Kota",
-            "Detail"
-        ];
-
-        $kota =
-            $this->kota->find($id);
-
-        $content =
-            "views/wilayah/kota/detail.php";
-
-        include
-            "views/layouts/app.php";
+        $breadcrumbs = ["Master Wilayah", "Kota", "Detail"];
+        $kota = $this->kota->find($id);
+        
+        $content = "views/wilayah/kota/detail.php";
+        include "views/layouts/app.php";
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Edit
-    |--------------------------------------------------------------------------
-    */
 
     public function edit($id)
     {
         $page_title = "Edit Kota";
-
-        $breadcrumbs = [
-            "Master Wilayah",
-            "Kota",
-            "Edit"
-        ];
-
-        $kota =
-            $this->kota->find($id);
-
-        $provinsi =
-            $this->provinsi->getAll();
-
-        $content =
-            "views/wilayah/kota/edit.php";
-
-        include
-            "views/layouts/app.php";
+        $breadcrumbs = ["Master Wilayah", "Kota", "Edit"];
+        $kota = $this->kota->find($id);
+        $provinsi = $this->provinsi->getAll();
+        
+        $content = "views/wilayah/kota/edit.php";
+        include "views/layouts/app.php";
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Update
-    |--------------------------------------------------------------------------
-    */
 
     public function update()
     {
-        $this->kota->update($_POST);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (empty($_POST['nama_kota']) || empty($_POST['id_provinsi'])) {
+                $_SESSION['error'] = "Semua form wajib diisi.";
+                header("Location:?page=kota-edit&id=" . $_POST['id_kota']);
+                exit;
+            }
 
-        header("Location:?page=kota");
-
-        exit;
+            $this->kota->update($_POST);
+            $_SESSION['success'] = "Data kota/kabupaten berhasil diperbarui.";
+            header("Location:?page=kota");
+            exit;
+        }
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Delete
-    |--------------------------------------------------------------------------
-    */
 
     public function delete($id)
     {
         if ($this->kota->canDelete($id)) {
-
             $this->kota->delete($id);
+            $_SESSION['success'] = "Data kota berhasil dihapus secara permanen.";
+        } else {
+            $_SESSION['error'] = "Gagal! Data kota sedang digunakan oleh wilayah kecamatan.";
         }
-
+        
         header("Location:?page=kota");
-
         exit;
     }
 }

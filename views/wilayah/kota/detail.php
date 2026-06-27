@@ -1,87 +1,38 @@
-<div class="card shadow-sm border-0 rounded-4">
-
-    <div class="card-header bg-white">
-
-        <h4 class="fw-bold mb-0">
-
-            Detail Provinsi
-
-        </h4>
-
+<div class="container-fluid py-4 fade-up">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card border-0 shadow-sm" style="border-radius: 16px;">
+                <div class="card-header bg-white py-3 border-bottom" style="border-radius: 16px 16px 0 0;">
+                    <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-info-circle-fill text-info me-2"></i>Detail Informasi Kota</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-borderless align-middle mb-0">
+                            <tr>
+                                <td width="40%" class="text-muted fw-bold small py-2">KODE REFERENSI (ID)</td>
+                                <td width="5%" class="py-2">:</td>
+                                <td class="fw-bold text-dark py-2 font-monospace">#<?= htmlspecialchars($kota['id_kota']) ?></td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted fw-bold small py-2">NAMA KOTA/KABUPATEN</td>
+                                <td class="py-2">:</td>
+                                <td class="fw-bold text-dark py-2"><?= htmlspecialchars($kota['nama_kota']) ?></td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted fw-bold small py-2">PROVINSI INDUK</td>
+                                <td class="py-2">:</td>
+                                <td class="fw-bold text-dark py-2"><?= htmlspecialchars($kota['nama_provinsi'] ?? 'Tidak Diketahui') ?></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-top d-flex justify-content-end">
+                        <a href="?page=kota" class="btn btn-light rounded-pill px-4 fw-bold text-secondary border shadow-sm">
+                            <i class="bi bi-arrow-left me-2"></i>Kembali ke Daftar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="card-body">
-
-        <table class="table table-borderless">
-
-            <tr>
-
-                <th width="220">
-
-                    ID Kota/Kabupaten
-
-                </th>
-
-                <td>
-
-                    <?= $kota['id_kota']; ?>
-
-                </td>
-
-            </tr>
-
-            <tr>
-
-                <th>
-
-                    Nama Kota/Kabupaten
-
-                </th>
-
-                <td>
-
-                    <?= htmlspecialchars($kota['nama_kota']); ?>
-
-                </td>
-
-            </tr>
-
-            <tr>
-
-                <th>
-
-                    Jumlah Kecamatan
-
-                </th>
-
-                <td>
-
-                    <span class="badge bg-primary">
-
-                        <?= $kota['total_kecamatan']; ?>
-
-                    </span>
-
-                </td>
-
-            </tr>
-
-        </table>
-
-    </div>
-
-    <div class="card-footer bg-white text-end">
-
-        <a
-            href="?page=kota"
-            class="btn btn-secondary rounded-pill">
-
-            <i class="bi bi-arrow-left"></i>
-
-            Kembali
-
-        </a>
-
-    </div>
-
 </div>

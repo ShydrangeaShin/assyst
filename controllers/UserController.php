@@ -14,26 +14,28 @@ class UserController
         $page_title = "Manajemen Akun";
         $breadcrumbs = ["Manajemen Akun"];
 
+        // Tangkap parameter search
+        $search = $_GET['search'] ?? '';
+
         $query = "
             SELECT u.*, r.nama_role 
             FROM users u 
             JOIN roles r ON u.id_role = r.id_role 
-            ORDER BY u.id_role ASC, u.id_user DESC
         ";
+
+        // Terapkan filter pencarian jika ada
+        if ($search != '') {
+            $safe_search = $this->conn->real_escape_string($search);
+            $query .= " WHERE u.nama LIKE '%$safe_search%' 
+                        OR u.username LIKE '%$safe_search%' 
+                        OR r.nama_role LIKE '%$safe_search%' ";
+        }
+
+        $query .= " ORDER BY u.id_role ASC, u.id_user DESC";
+        
         $users = mysqli_query($this->conn, $query);
 
         $content = "views/user/index.php";
-        include "views/layouts/app.php";
-    }
-
-    public function create()
-    {
-        $page_title = "Tambah Akun Baru";
-        $breadcrumbs = ["Manajemen Akun", "Tambah"];
-
-        $roles = mysqli_query($this->conn, "SELECT * FROM roles");
-
-        $content = "views/user/create.php";
         include "views/layouts/app.php";
     }
 

@@ -3,7 +3,14 @@
 // base url web
 function base_url($path = '')
 {
-    return 'http://localhost:8080/assyst/' . $path;
+    // Deteksi protokol (http / https)
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+    // Deteksi host (localhost, IP, atau domain)
+    $host = $_SERVER['HTTP_HOST'];
+    // Folder root project
+    $folder = '/assyst/'; 
+    
+    return $protocol . "://" . $host . $folder . ltrim($path, '/');
 }
 
 
@@ -61,11 +68,8 @@ function uploadFile(
         $ext;
 
     move_uploaded_file(
-        $tmp,
-        "../assets/uploads/" .
-        $folder .
-        "/" .
-        $newName
+    $tmp,
+    "assets/uploads/" . $folder . "/" . $newName
     );
 
     return $newName;

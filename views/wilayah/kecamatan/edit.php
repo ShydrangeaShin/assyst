@@ -1,171 +1,47 @@
-<?php
-$row = $kecamatan ?? $data ?? [];
-$selectedKota = $row['id_kota'] ?? $row['kota_id'] ?? '';
-$selectedProvinsi = $row['id_provinsi'] ?? $row['provinsi_id'] ?? '';
-$idKecamatan = $row['id_kecamatan'] ?? $row['id'] ?? '';
-?>
+<div class="container-fluid py-4 fade-up">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card border-0 shadow-sm" style="border-radius: 16px;">
+                <div class="card-header bg-white py-3 border-bottom" style="border-radius: 16px 16px 0 0;">
+                    <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-pencil-square text-primary me-2"></i>Modifikasi Data Kecamatan</h5>
+                </div>
+                
+                <div class="card-body p-4">
+                    <?php if (isset($_SESSION['error'])): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="border-radius: 12px;">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> <?= $_SESSION['error']; unset($_SESSION['error']); ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
 
-<div class="card shadow-sm border-0 rounded-4">
+                    <form action="?page=kecamatan-update" method="POST">
+                        <input type="hidden" name="id_kecamatan" value="<?= htmlspecialchars($kecamatan['id_kecamatan']) ?>">
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-muted">Kota / Kabupaten Induk</label>
+                            <select name="id_kota" class="form-select px-3 py-2" required>
+                                <?php if(isset($kota)): ?>
+                                    <?php while($k = mysqli_fetch_assoc($kota)): ?>
+                                        <option value="<?= $k['id_kota'] ?>" <?= ($k['id_kota'] == $kecamatan['id_kota']) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($k['nama_kota']) ?>
+                                        </option>
+                                    <?php endwhile; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
 
-    <div class="card-header bg-white">
-
-        <h4 class="fw-bold mb-0">
-
-            Edit Kecamatan
-
-        </h4>
-
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-muted">Nama Kecamatan</label>
+                            <input type="text" name="nama_kecamatan" class="form-control px-3 py-2" required value="<?= htmlspecialchars($kecamatan['nama_kecamatan']) ?>" placeholder="Ubah nama kecamatan">
+                        </div>
+                        
+                        <div class="d-flex justify-content-end gap-2 border-top pt-4 mt-2">
+                            <a href="?page=kecamatan" class="btn btn-light rounded-pill px-4 fw-bold text-secondary border">Batalkan</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm"><i class="bi bi-save me-2"></i>Simpan Perubahan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <form
-        method="POST"
-        action="?page=kecamatan-update">
-
-        <div class="card-body">
-
-            <input
-                type="hidden"
-                name="id_kecamatan"
-                value="<?= htmlspecialchars($idKecamatan) ?>">
-
-            <div class="mb-3">
-
-                <label class="form-label">
-
-                    Provinsi
-
-                </label>
-
-                <select
-                    id="provinsi"
-                    class="form-select"
-                    required>
-
-                    <?php foreach(($provinsi ?? []) as $item): ?>
-
-                        <?php $idProvinsi = $item['id_provinsi'] ?? $item['id'] ?? ''; ?>
-
-                        <option
-                            value="<?= htmlspecialchars($idProvinsi) ?>"
-                            <?= ((string)$idProvinsi === (string)$selectedProvinsi) ? 'selected' : '' ?>>
-
-                            <?= htmlspecialchars($item['nama_provinsi'] ?? '') ?>
-
-                        </option>
-
-                    <?php endforeach; ?>
-
-                </select>
-
-            </div>
-
-            <div class="mb-3">
-
-                <label class="form-label">
-
-                    Kota / Kabupaten
-
-                </label>
-
-                <select
-                    id="kota"
-                    name="id_kota"
-                    class="form-select"
-                    required>
-
-                    <?php foreach(($kota ?? []) as $item): ?>
-
-                        <?php $idKota = $item['id_kota'] ?? $item['id'] ?? ''; ?>
-
-                        <option
-                            value="<?= htmlspecialchars($idKota) ?>"
-                            data-provinsi="<?= htmlspecialchars($item['id_provinsi'] ?? '') ?>"
-                            <?= ((string)$idKota === (string)$selectedKota) ? 'selected' : '' ?>>
-
-                            <?= htmlspecialchars($item['nama_kota'] ?? '') ?>
-
-                        </option>
-
-                    <?php endforeach; ?>
-
-                </select>
-
-            </div>
-
-            <div class="mb-3">
-
-                <label class="form-label">
-
-                    Nama Kecamatan
-
-                </label>
-
-                <input
-                    type="text"
-                    name="nama_kecamatan"
-                    class="form-control"
-                    value="<?= htmlspecialchars($row['nama_kecamatan'] ?? '') ?>"
-                    required>
-
-            </div>
-
-        </div>
-
-        <div class="card-footer bg-white">
-
-            <a
-                href="?page=kecamatan"
-                class="btn btn-secondary">
-
-                Batal
-
-            </a>
-
-            <button class="btn btn-primary">
-
-                Simpan Perubahan
-
-            </button>
-
-        </div>
-
-    </form>
-
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const provinsiSelect = document.getElementById('provinsi');
-    const kotaSelect = document.getElementById('kota');
-    const selectedKota = '<?= htmlspecialchars((string)$selectedKota, ENT_QUOTES) ?>';
-
-    if (!provinsiSelect || !kotaSelect) {
-        return;
-    }
-
-    function filterKota(keepSelected) {
-        const provinsiId = provinsiSelect.value;
-
-        kotaSelect.disabled = provinsiId === '';
-
-        Array.from(kotaSelect.options).forEach(function(option) {
-            const match = option.dataset.provinsi === provinsiId;
-
-            option.hidden = !match;
-            option.disabled = !match;
-        });
-
-        if (keepSelected) {
-            kotaSelect.value = selectedKota;
-            return;
-        }
-
-        kotaSelect.value = '';
-    }
-
-    filterKota(true);
-    provinsiSelect.addEventListener('change', function() {
-        filterKota(false);
-    });
-});
-</script>

@@ -2,194 +2,100 @@
 
 require_once 'models/Desa.php';
 require_once 'models/Kecamatan.php';
-require_once 'models/Kota.php';
-require_once 'models/Provinsi.php';
 
 class DesaController
 {
     private $desa;
     private $kecamatan;
-    private $kota;
-    private $provinsi;
 
     public function __construct($db)
     {
         $this->desa = new Desa($db);
         $this->kecamatan = new Kecamatan($db);
-        $this->kota = new Kota($db);
-        $this->provinsi = new Provinsi($db);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Index
-    |--------------------------------------------------------------------------
-    */
 
     public function index()
     {
         $page_title = "Data Desa / Kelurahan";
-
-        $breadcrumbs = [
-            "Master Wilayah",
-            "Desa / Kelurahan"
-        ];
-
+        $breadcrumbs = ["Master Wilayah", "Desa"];
         $search = $_GET['search'] ?? '';
 
         $result = $this->desa->getAll($search);
-
         $desa = [];
 
         while ($row = mysqli_fetch_assoc($result)) {
-
-            $row['can_delete'] =
-                $this->desa->canDelete(
-                    $row['id_desa']
-                );
-
+            $row['can_delete'] = $this->desa->canDelete($row['id_desa']);
             $desa[] = $row;
         }
 
-        $provinsi = $this->provinsi->getAll();
-        $kota = $this->kota->getAll();
         $kecamatan = $this->kecamatan->getAll();
-
-        $content =
-            "views/wilayah/desa/index.php";
-
-        include
-            "views/layouts/app.php";
+        
+        $content = "views/wilayah/desa/index.php";
+        include "views/layouts/app.php";
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Create
-    |--------------------------------------------------------------------------
-    */
-
-    public function create()
-    {
-        $page_title = "Tambah Desa / Kelurahan";
-
-        $breadcrumbs = [
-            "Master Wilayah",
-            "Desa / Kelurahan",
-            "Tambah"
-        ];
-
-        $provinsi = $this->provinsi->getAll();
-        $kota = $this->kota->getAll();
-        $kecamatan = $this->kecamatan->getAll();
-
-        $content =
-            "views/wilayah/desa/create.php";
-
-        include
-            "views/layouts/app.php";
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Store
-    |--------------------------------------------------------------------------
-    */
 
     public function store()
     {
-        $this->desa->insert($_POST);
-
-        header("Location:?page=desa");
-
-        exit;
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (empty($_POST['nama_desa']) || empty($_POST['id_kecamatan'])) {
+                $_SESSION['error'] = "Kecamatan dan Nama Desa wajib diisi.";
+            } else {
+                $this->desa->insert($_POST);
+                $_SESSION['success'] = "Data desa/kelurahan berhasil ditambahkan.";
+            }
+            header("Location:?page=desa");
+            exit;
+        }
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Detail
-    |--------------------------------------------------------------------------
-    */
 
     public function detail($id)
     {
-        $page_title = "Detail Desa / Kelurahan";
+        $page_title = "Detail Desa";
+        $breadcrumbs = ["Master Wilayah", "Desa", "Detail"];
+        $desa = $this->desa->find($id);
 
-        $breadcrumbs = [
-            "Master Wilayah",
-            "Desa / Kelurahan",
-            "Detail"
-        ];
-
-        $desa =
-            $this->desa->find($id);
-
-        $content =
-            "views/wilayah/desa/detail.php";
-
-        include
-            "views/layouts/app.php";
+        $content = "views/wilayah/desa/detail.php";
+        include "views/layouts/app.php";
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Edit
-    |--------------------------------------------------------------------------
-    */
 
     public function edit($id)
     {
-        $page_title = "Edit Desa / Kelurahan";
-
-        $breadcrumbs = [
-            "Master Wilayah",
-            "Desa / Kelurahan",
-            "Edit"
-        ];
-
-        $desa =
-            $this->desa->find($id);
-
-        $provinsi = $this->provinsi->getAll();
-        $kota = $this->kota->getAll();
+        $page_title = "Edit Desa";
+        $breadcrumbs = ["Master Wilayah", "Desa", "Edit"];
+        $desa = $this->desa->find($id);
+        
         $kecamatan = $this->kecamatan->getAll();
 
-        $content =
-            "views/wilayah/desa/edit.php";
-
-        include
-            "views/layouts/app.php";
+        $content = "views/wilayah/desa/edit.php";
+        include "views/layouts/app.php";
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Update
-    |--------------------------------------------------------------------------
-    */
 
     public function update()
     {
-        $this->desa->update($_POST);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if (empty($_POST['nama_desa']) || empty($_POST['id_kecamatan'])) {
+                $_SESSION['error'] = "Semua form wajib diisi.";
+                header("Location:?page=desa-edit&id=" . $_POST['id_desa']);
+                exit;
+            }
 
-        header("Location:?page=desa");
-
-        exit;
+            $this->desa->update($_POST);
+            $_SESSION['success'] = "Data desa/kelurahan berhasil diperbarui.";
+            header("Location:?page=desa");
+            exit;
+        }
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Delete
-    |--------------------------------------------------------------------------
-    */
 
     public function delete($id)
     {
         if ($this->desa->canDelete($id)) {
-
             $this->desa->delete($id);
+            $_SESSION['success'] = "Data desa berhasil dihapus secara permanen.";
+        } else {
+            $_SESSION['error'] = "Gagal! Data desa sedang digunakan oleh data keluarga/penduduk.";
         }
 
         header("Location:?page=desa");
-
         exit;
     }
 }

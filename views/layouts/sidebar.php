@@ -78,7 +78,7 @@ $currentPage = $_GET['page'] ?? '';
             </li>
 
             <li class="nav-item mb-1">
-                <a class="nav-link <?= $currentPage=='akun' ? 'active' : '' ?>" href="?page=akun">
+                <a class="nav-link <?= ($currentPage=='user' || $currentPage=='user-create' || $currentPage=='user-edit') ? 'active' : '' ?>" href="?page=user">
                     <i class="bi bi-people"></i>
                     Manajemen Akun
                 </a>
