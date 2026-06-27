@@ -34,45 +34,25 @@ function tanggalIndonesia($tanggal)
 }
 
 // fungsi upload file
-function uploadFile(
-    $file,
-    $folder
-)
+function uploadFile($file, $folder)
 {
-    $allowed = ['jpg', 'jpeg', 'png'];
-
-    $filename = $file['name'];
-
     $tmp = $file['tmp_name'];
+    $name = $file['name'];
+    $ext = pathinfo($name, PATHINFO_EXTENSION);
+    $newName = time() . '_' . uniqid() . '.' . $ext;
 
-    $size = $file['size'];
-
-    $ext = strtolower(
-        pathinfo(
-            $filename,
-            PATHINFO_EXTENSION
-        )
-    );
-
-    if (!in_array($ext, $allowed)) {
-        return false;
+    // Pastikan path absolut ke folder upload dari root proyek
+    $targetDir = __DIR__ . '/../assets/uploads/' . $folder . '/';
+    
+    // Pastikan folder ada dan memiliki izin tulis
+    if (!is_dir($targetDir)) {
+        mkdir($targetDir, 0777, true);
     }
 
-    if ($size > 5242880) {
-        return false;
+    if (move_uploaded_file($tmp, $targetDir . $newName)) {
+        return $newName;
     }
-
-    $newName =
-        uniqid() .
-        '.' .
-        $ext;
-
-    move_uploaded_file(
-    $tmp,
-    "assets/uploads/" . $folder . "/" . $newName
-    );
-
-    return $newName;
+    return null;
 }
 
 // redirect

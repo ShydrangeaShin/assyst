@@ -63,7 +63,7 @@
                                 <div class="card-body p-0 text-center bg-light" style="height: 220px;">
                                     <?php if($data_foto['file']): ?>
                                         <a href="<?= asset('uploads/'.$folder.'/'.$data_foto['file']) ?>" target="_blank" title="Klik untuk memperbesar">
-                                            <img src="<?= asset('uploads/'.$folder.'/'.$data_foto['file']) ?>" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="<?= $data_foto['label'] ?>">
+                                            <img src="assets/uploads/<?= $folder ?>/<?= $data_foto['file'] ?>" class="img-fluid w-100 h-100" style="object-fit: cover;" alt="<?= $data_foto['label'] ?>">
                                         </a>
                                     <?php else: ?>
                                         <div class="d-flex flex-column align-items-center justify-content-center h-100 text-secondary">

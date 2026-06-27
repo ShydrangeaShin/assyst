@@ -82,7 +82,7 @@ class KondisiController
         $page_title = "Input Kondisi Sosial & Foto";
         $breadcrumbs = ["Pendataan", "Kondisi Sosial", "Input Data"];
         $role = $_SESSION['user']['role'];
-        $id_user_login = $_SESSION['user']['id_user'];
+        $id_user_login = $_SESSION['user']['id'];
 
         // Ambil profil dasar keluarga
         $stmt_k = $this->conn->prepare("SELECT id_keluarga, id_petugas, nik_kk, nama_kepala_keluarga FROM keluarga WHERE id_keluarga = ?");
