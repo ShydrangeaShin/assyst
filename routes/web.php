@@ -9,6 +9,7 @@ require_once 'controllers/ProvinsiController.php';
 require_once 'controllers/KotaController.php';
 require_once 'controllers/KecamatanController.php';
 require_once 'controllers/DesaController.php';
+require_once 'controllers/UserController.php';
 
 $auth = new AuthController($conn);
 $dashboard = new DashboardController($conn);
@@ -411,6 +412,48 @@ switch ($page) {
         $controller->delete($_GET['id']);
 
     break;
+    
+    /*
+    |--------------------------------------------------------------------------
+    | USER / MANAJEMEN AKUN
+    |--------------------------------------------------------------------------
+    */
+    
+    case 'user':
+        onlyAdmin();
+        $controller = new UserController($conn);
+        $controller->index();
+        break;
+
+    case 'user-create':
+        onlyAdmin();
+        $controller = new UserController($conn);
+        $controller->create();
+        break;
+
+    case 'user-store':
+        onlyAdmin();
+        $controller = new UserController($conn);
+        $controller->store();
+        break;
+
+    case 'user-edit':
+        onlyAdmin();
+        $controller = new UserController($conn);
+        $controller->edit($_GET['id']);
+        break;
+
+    case 'user-update':
+        onlyAdmin();
+        $controller = new UserController($conn);
+        $controller->update();
+        break;
+
+    case 'user-delete':
+        onlyAdmin();
+        $controller = new UserController($conn);
+        $controller->delete($_GET['id']);
+        break;
 
     /*
     |--------------------------------------------------------------------------
