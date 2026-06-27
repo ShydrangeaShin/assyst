@@ -10,6 +10,7 @@ require_once 'controllers/KotaController.php';
 require_once 'controllers/KecamatanController.php';
 require_once 'controllers/DesaController.php';
 require_once 'controllers/UserController.php';
+require_once 'controllers/TugasController.php';
 
 $auth = new AuthController($conn);
 $dashboard = new DashboardController($conn);
@@ -418,18 +419,13 @@ switch ($page) {
     | USER / MANAJEMEN AKUN
     |--------------------------------------------------------------------------
     */
-    
+
     case 'user':
         onlyAdmin();
         $controller = new UserController($conn);
         $controller->index();
         break;
 
-    case 'user-create':
-        onlyAdmin();
-        $controller = new UserController($conn);
-        $controller->create();
-        break;
 
     case 'user-store':
         onlyAdmin();
@@ -452,6 +448,41 @@ switch ($page) {
     case 'user-delete':
         onlyAdmin();
         $controller = new UserController($conn);
+        $controller->delete($_GET['id']);
+        break;
+
+    /*
+    |--------------------------------------------------------------------------
+    | TUGAS / MANAJEMEN PEKERJAAN
+    |--------------------------------------------------------------------------
+    */
+    case 'tugas':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new TugasController($conn);
+        $controller->index();
+        break;
+
+    case 'tugas-store':
+        onlyAdmin(); // Hanya admin yang boleh menambah tugas
+        $controller = new TugasController($conn);
+        $controller->store();
+        break;
+
+    case 'tugas-edit':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new TugasController($conn);
+        $controller->edit($_GET['id']);
+        break;
+
+    case 'tugas-update':
+        if (!isset($_SESSION['user'])) { header("Location:?page=login"); exit; }
+        $controller = new TugasController($conn);
+        $controller->update();
+        break;
+
+    case 'tugas-delete':
+        onlyAdmin(); // Hanya admin yang boleh menghapus
+        $controller = new TugasController($conn);
         $controller->delete($_GET['id']);
         break;
 

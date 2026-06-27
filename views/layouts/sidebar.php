@@ -87,7 +87,7 @@ $currentPage = $_GET['page'] ?? '';
             <li class="nav-item mb-1">
                 <a class="nav-link <?= $currentPage=='tugas' ? 'active' : '' ?>" href="?page=tugas">
                     <i class="bi bi-clipboard-check"></i>
-                    Tugas Petugas
+                    Distribusi Tugas
                 </a>
             </li>
 

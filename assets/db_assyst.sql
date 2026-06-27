@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 27, 2026 at 11:31 AM
+-- Generation Time: Jun 27, 2026 at 04:05 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -212,6 +212,7 @@ INSERT INTO `roles` (`id_role`, `nama_role`) VALUES
 CREATE TABLE `tugas_petugas` (
   `id_tugas` int(11) NOT NULL,
   `id_petugas` int(11) NOT NULL,
+  `id_desa` int(11) DEFAULT NULL,
   `nama_tugas` varchar(150) NOT NULL,
   `deskripsi` text DEFAULT NULL,
   `tanggal_penugasan` date NOT NULL,
@@ -240,7 +241,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id_user`, `id_role`, `nama`, `username`, `password`, `status_akun`, `created_at`) VALUES
-(4, 1, 'Administrator', 'admin', '$2y$10$y08LIlNJlqPFH286ldlVXOp71U2dcAfTmv7hI8micnkwcNBnNHcXi', 'Aktif', '2026-06-25 15:16:39');
+(4, 1, 'Administrator', 'admin', '$2y$10$y08LIlNJlqPFH286ldlVXOp71U2dcAfTmv7hI8micnkwcNBnNHcXi', 'Aktif', '2026-06-25 15:16:39'),
+(5, 2, 'John Edith', 'edith', '$2y$10$.3ktlJPE8pjpsGoNRT7KxOvG/cCqS71yU4suV7iFnVCo2DWyUPXaO', 'Aktif', '2026-06-27 13:46:35');
 
 -- --------------------------------------------------------
 
@@ -432,7 +434,7 @@ ALTER TABLE `tugas_petugas`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `verifikasi`

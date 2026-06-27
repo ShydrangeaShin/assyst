@@ -32,8 +32,10 @@ class UserController
         }
 
         $query .= " ORDER BY u.id_role ASC, u.id_user DESC";
-        
         $users = mysqli_query($this->conn, $query);
+
+        // Ambil data roles untuk dropdown di dalam Modal Tambah
+        $roles = mysqli_query($this->conn, "SELECT * FROM roles ORDER BY id_role ASC");
 
         $content = "views/user/index.php";
         include "views/layouts/app.php";
@@ -41,34 +43,36 @@ class UserController
 
     public function store()
     {
-        $nama = $_POST['nama'];
-        $username = $_POST['username'];
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $id_role = (int)$_POST['id_role'];
-        $status_akun = $_POST['status_akun'];
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $nama = $_POST['nama'];
+            $username = $_POST['username'];
+            $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            $id_role = (int)$_POST['id_role'];
+            $status_akun = $_POST['status_akun'];
 
-        // Cek username unik
-        $stmt_cek = $this->conn->prepare("SELECT id_user FROM users WHERE username = ?");
-        $stmt_cek->bind_param("s", $username);
-        $stmt_cek->execute();
-        
-        if ($stmt_cek->get_result()->num_rows > 0) {
-            $_SESSION['error'] = "Username sudah digunakan oleh akun lain.";
-            header("Location: index.php?page=user-create");
+            // Cek username unik
+            $stmt_cek = $this->conn->prepare("SELECT id_user FROM users WHERE username = ?");
+            $stmt_cek->bind_param("s", $username);
+            $stmt_cek->execute();
+            
+            if ($stmt_cek->get_result()->num_rows > 0) {
+                $_SESSION['error'] = "Username sudah digunakan oleh akun lain.";
+                header("Location: index.php?page=user"); // Kembali ke index jika gagal
+                exit;
+            }
+
+            $stmt = $this->conn->prepare("INSERT INTO users (nama, username, password, id_role, status_akun) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssis", $nama, $username, $password, $id_role, $status_akun);
+            
+            if ($stmt->execute()) {
+                $_SESSION['success'] = "Data akun berhasil ditambahkan.";
+            } else {
+                $_SESSION['error'] = "Gagal menambahkan data akun sistem.";
+            }
+            
+            header("Location: index.php?page=user");
             exit;
         }
-
-        $stmt = $this->conn->prepare("INSERT INTO users (nama, username, password, id_role, status_akun) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssis", $nama, $username, $password, $id_role, $status_akun);
-        
-        if ($stmt->execute()) {
-            $_SESSION['success'] = "Data akun berhasil ditambahkan.";
-        } else {
-            $_SESSION['error'] = "Gagal menambahkan data akun sistem.";
-        }
-        
-        header("Location: index.php?page=user");
-        exit;
     }
 
     public function edit($id)
