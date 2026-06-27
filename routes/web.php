@@ -29,9 +29,9 @@ switch ($page) {
         }
 
         $page_title = 'Login';
-        $content = 'views/auth/login.php';
+        
+        include 'views/auth/login.php';
 
-        include 'views/layouts/guest.php';
 
     break;
 
