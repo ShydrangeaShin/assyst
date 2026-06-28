@@ -12,9 +12,8 @@ src="https://cdn.jsdelivr.net/npm/chart.js">
 
 <!-- Custom JS -->
 
-<script
-src="<?= base_url('assets/js/script.js'); ?>">
-</script>
+<script src="<?= base_url('assets/js/script.js'); ?>"> </script>
+<script src="<?= base_url('assets/js/wilayah.js') ?>"></script>
 
 <script>
 

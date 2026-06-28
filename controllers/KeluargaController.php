@@ -96,6 +96,7 @@ class KeluargaController
             $stmt->bind_param("issssiiii", $id_petugas, $nik_kk, $nama_kepala_keluarga, $alamat, $nomor_telepon, $id_provinsi, $id_kota, $id_kecamatan, $id_desa);
             
             if ($stmt->execute()) {
+                catatLog($this->conn, "Meregistrasi data keluarga baru dengan NIK: $nik_kk");
                 $_SESSION['success'] = "Data keluarga baru berhasil diregistrasi.";
             } else {
                 $_SESSION['error'] = "Gagal menyimpan data keluarga.";
@@ -110,7 +111,7 @@ class KeluargaController
         $page_title = "Detail Keluarga";
         $breadcrumbs = ["Pendataan", "Keluarga", "Detail"];
         $role = $_SESSION['user']['role'];
-        $id_user_login = $_SESSION['user']['id_user'];
+        $id_user_login = $_SESSION['user']['id'];
 
         $query = "
             SELECT k.*, u.nama as nama_petugas, d.nama_desa, kec.nama_kecamatan, ko.nama_kota, p.nama_provinsi
@@ -141,7 +142,7 @@ class KeluargaController
         $page_title = "Edit Data Keluarga";
         $breadcrumbs = ["Pendataan", "Keluarga", "Edit"];
         $role = $_SESSION['user']['role'];
-        $id_user_login = $_SESSION['user']['id_user'];
+        $id_user_login = $_SESSION['user']['id'];
 
         $stmt = $this->conn->prepare("SELECT * FROM keluarga WHERE id_keluarga = ?");
         $stmt->bind_param("i", $id);

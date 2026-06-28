@@ -155,33 +155,16 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const pSel = document.getElementById('provinsi'); const koSel = document.getElementById('kota');
-    const kecSel = document.getElementById('kecamatan'); const dSel = document.getElementById('desa');
-    const dKota = <?= json_encode($kota); ?>; const dKec = <?= json_encode($kecamatan); ?>; const dDesa = <?= json_encode($desa); ?>;
-
-    pSel.addEventListener('change', function() {
-        koSel.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
-        kecSel.innerHTML = '<option value="">Pilih Kecamatan</option>'; dSel.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
-        koSel.disabled = kecSel.disabled = dSel.disabled = true;
-        if(this.value) {
-            koSel.disabled = false;
-            dKota.filter(k => k.id_provinsi == this.value).forEach(k => { koSel.innerHTML += `<option value="${k.id_kota}">${k.nama_kota}</option>`; });
-        }
-    });
-    koSel.addEventListener('change', function() {
-        kecSel.innerHTML = '<option value="">Pilih Kecamatan</option>'; dSel.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>';
-        kecSel.disabled = dSel.disabled = true;
-        if(this.value) {
-            kecSel.disabled = false;
-            dKec.filter(k => k.id_kota == this.value).forEach(k => { kecSel.innerHTML += `<option value="${k.id_kecamatan}">${k.nama_kecamatan}</option>`; });
-        }
-    });
-    kecSel.addEventListener('change', function() {
-        dSel.innerHTML = '<option value="">Pilih Desa/Kelurahan</option>'; dSel.disabled = true;
-        if(this.value) {
-            dSel.disabled = false;
-            dDesa.filter(k => k.id_kecamatan == this.value).forEach(k => { dSel.innerHTML += `<option value="${k.id_desa}">${k.nama_desa}</option>`; });
-        }
+    const dKota = <?= json_encode($kota ?? []); ?>; 
+    const dKec = <?= json_encode($kecamatan ?? []); ?>; 
+    const dDesa = <?= json_encode($desa ?? []); ?>;
+    
+    // Panggil fungsi eksternal
+    initCascadingWilayah(dKota, dKec, dDesa, {
+        provinsi: 'provinsi', // ID elemen HTML
+        kota: 'kota',
+        kecamatan: 'kecamatan',
+        desa: 'desa'
     });
 });
 </script>

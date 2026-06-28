@@ -128,44 +128,20 @@
     </div>
 </div>
 
-<style>
-@media print {
-    body { background-color: white !important; }
-    .sidebar, .navbar, .d-print-none, .breadcrumb { display: none !important; }
-    .content { padding: 0 !important; margin: 0 !important; margin-left: 0 !important; }
-    .card { box-shadow: none !important; border: 1px solid #ddd !important; }
-    .table th { background-color: #f8f9fa !important; color: #000 !important; }
-    .badge { border: 1px solid #000 !important; color: #000 !important; background-color: transparent !important; }
-}
-</style>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const pSel = document.getElementById('provinsi'); const koSel = document.getElementById('kota');
-    const kecSel = document.getElementById('kecamatan'); const dSel = document.getElementById('desa');
-    const dKota = <?= json_encode($kota ?? []); ?>; const dKec = <?= json_encode($kecamatan ?? []); ?>; const dDesa = <?= json_encode($desa ?? []); ?>;
-
-    function renderOptions(dataArr, filterKey, filterVal, targetSelect, valueKey, textKey, selectedVal) {
-        targetSelect.innerHTML = '<option value="">Semua ' + (targetSelect.id.charAt(0).toUpperCase() + targetSelect.id.slice(1)) + '</option>';
-        if(!filterVal) { targetSelect.disabled = true; return; }
-        targetSelect.disabled = false;
-        dataArr.filter(item => String(item[filterKey]) === String(filterVal)).forEach(item => {
-            const isSelected = String(item[valueKey]) === String(selectedVal) ? 'selected' : '';
-            targetSelect.innerHTML += `<option value="${item[valueKey]}" ${isSelected}>${item[textKey]}</option>`;
-        });
-    }
-
-    function initCascading() {
-        const selKota = koSel.getAttribute('data-selected'); const selKec = kecSel.getAttribute('data-selected'); const selDesa = dSel.getAttribute('data-selected');
-        renderOptions(dKota, 'id_provinsi', pSel.value, koSel, 'id_kota', 'nama_kota', selKota);
-        renderOptions(dKec, 'id_kota', selKota || koSel.value, kecSel, 'id_kecamatan', 'nama_kecamatan', selKec);
-        renderOptions(dDesa, 'id_kecamatan', selKec || kecSel.value, dSel, 'id_desa', 'nama_desa', selDesa);
-    }
-
-    pSel.addEventListener('change', () => { koSel.setAttribute('data-selected',''); kecSel.setAttribute('data-selected',''); dSel.setAttribute('data-selected',''); initCascading(); });
-    koSel.addEventListener('change', function() { koSel.setAttribute('data-selected', this.value); kecSel.setAttribute('data-selected',''); dSel.setAttribute('data-selected',''); initCascading(); });
-    kecSel.addEventListener('change', function() { kecSel.setAttribute('data-selected', this.value); dSel.setAttribute('data-selected',''); initCascading(); });
+    const dKota = <?= json_encode($kota ?? []); ?>; 
+    const dKec = <?= json_encode($kecamatan ?? []); ?>; 
+    const dDesa = <?= json_encode($desa ?? []); ?>;
     
-    initCascading();
+    // Panggil fungsi eksternal
+    initCascadingWilayah(dKota, dKec, dDesa, {
+        provinsi: 'provinsi', // ID elemen HTML
+        kota: 'kota',
+        kecamatan: 'kecamatan',
+        desa: 'desa'
+    });
 });
 </script>

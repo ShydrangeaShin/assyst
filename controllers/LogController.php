@@ -1,12 +1,13 @@
 <?php
+require_once 'models/LogAktivitas.php';
 
 class LogController
 {
-    private $conn;
+    private $logModel;
 
     public function __construct($db)
     {
-        $this->conn = $db;
+        $this->logModel = new LogAktivitas($db);
     }
 
     public function index()
@@ -15,28 +16,8 @@ class LogController
         $breadcrumbs = ["Sistem", "Log Aktivitas"];
         
         $search = $_GET['search'] ?? '';
-
-        // Query relasional untuk mengambil riwayat aktivitas
-        $query = "
-            SELECT 
-                l.id_log, l.aktivitas, l.ip_address, l.created_at,
-                u.nama, u.username,
-                r.nama_role
-            FROM log_aktivitas l
-            JOIN users u ON l.id_user = u.id_user
-            JOIN roles r ON u.id_role = r.id_role
-        ";
         
-        // Fitur pencarian berdasarkan aktivitas atau nama user
-        if ($search != '') {
-            $safe_search = $this->conn->real_escape_string($search);
-            $query .= " WHERE (l.aktivitas LIKE '%$safe_search%' OR u.nama LIKE '%$safe_search%' OR u.username LIKE '%$safe_search%')";
-        }
-
-        // Urutkan dari aktivitas terbaru
-        $query .= " ORDER BY l.created_at DESC";
-        
-        $logs = mysqli_query($this->conn, $query);
+        $logs = $this->logModel->getAllWithRelations($search);
 
         $content = "views/log/index.php";
         include "views/layouts/app.php";

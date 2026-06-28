@@ -10,7 +10,6 @@ $persenSelesai = $totalKeluarga > 0 ? round(($totalKeputusan / $totalKeluarga) *
 ?>
 
 <div class="container-fluid py-4 fade-up">
-    
     <div class="row g-3 mb-4">
         <div class="col-lg-6 col-md-6">
             <div class="card border-0 shadow-sm position-relative overflow-hidden" style="border-radius: 16px;">

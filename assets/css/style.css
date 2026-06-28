@@ -1038,3 +1038,20 @@ img{
     }
 
 }
+/* ==================================================
+   PRINT
+================================================== */
+
+@media print {
+    body { background-color: white !important; }
+    .sidebar, .navbar, .d-print-none, .breadcrumb { display: none !important; }
+    .content { padding: 0 !important; margin: 0 !important; margin-left: 0 !important; }
+    .card { box-shadow: none !important; border: 1px solid #ddd !important; }
+    .table th { background-color: #f8f9fa !important; color: #000 !important; }
+    .badge { border: 1px solid #000 !important; color: #000 !important; background-color: transparent !important; }
+}
+
+
+@media (min-width: 992px) {
+    .border-start-lg { border-left: 1px solid #dee2e6; }
+}

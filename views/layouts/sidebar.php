@@ -85,9 +85,9 @@ $currentPage = $_GET['page'] ?? '';
             </li>
 
             <li class="nav-item mb-1">
-                <a class="nav-link <?= $currentPage=='tugas' ? 'active' : '' ?>" href="?page=tugas">
-                    <i class="bi bi-clipboard-check"></i>
-                    Distribusi Tugas
+                <a class="nav-link <?= in_array($currentPage, ['tugas', 'tugas-edit']) ? 'active' : '' ?>" href="?page=tugas">
+                    <i class="bi bi-list-task"></i>
+                    Manajemen Tugas
                 </a>
             </li>
 
@@ -96,7 +96,7 @@ $currentPage = $_GET['page'] ?? '';
                 Validasi & Keputusan
             </li>
             <li class="nav-item mb-1">
-                <a class="nav-link <?= ($currentPage=='verifikasi' || $currentPage=='verifikasi-detail') ? 'active' : '' ?>" href="?page=verifikasi">
+                <a class="nav-link <?= in_array($currentPage, ['verifikasi', 'verifikasi-detail']) ? 'active' : '' ?>" href="?page=verifikasi">
                     <i class="bi bi-patch-check"></i>
                     Verifikasi Data Survei
                 </a>

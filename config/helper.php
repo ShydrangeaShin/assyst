@@ -108,3 +108,15 @@ function asset($path)
 {
     return base_url('assets/' . $path);
 }
+
+function catatLog($conn, $aktivitas) {
+    if(isset($_SESSION['user']['id'])) {
+        $id_user = (int)$_SESSION['user']['id'];
+        $id_role = (int)$_SESSION['user']['id_role']; // Pastikan id_role disimpan di session saat login
+        $ip_address = $_SERVER['REMOTE_ADDR'];
+        
+        $stmt = $conn->prepare("INSERT INTO log_aktivitas (id_user, id_role, aktivitas, ip_address) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("iiss", $id_user, $id_role, $aktivitas, $ip_address);
+        $stmt->execute();
+    }
+}

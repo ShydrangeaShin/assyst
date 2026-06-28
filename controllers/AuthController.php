@@ -61,7 +61,8 @@
             $_SESSION['user'] = [
             'id'   => $user['id_user'],
             'nama' => $user['nama'],
-            'role' => $user['nama_role']
+            'role' => $user['nama_role'],
+            'id_role' => $user['id_role']
             ];
 
             if ($user['nama_role'] == 'Admin')
